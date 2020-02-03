@@ -49,9 +49,9 @@ rule all:
     input:
         "calls/snps.raw.vcf.gz"  # final output is a single vcf file
 
-include: "/home/bioinf/PycharmProjects/gbs/workflow/rules/demultiplex.smk"
-include: "/home/bioinf/PycharmProjects/gbs/workflow/rules/trimmomatic.smk"
-include: "/home/bioinf/PycharmProjects/gbs/workflow/rules/bwa_map.smk"
-include: "/home/bioinf/PycharmProjects/gbs/workflow/rules/novosort.smk"
-include: "/home/bioinf/PycharmProjects/gbs/workflow/rules/samtools_call.smk"
+include: "workflow/rules/demultiplex.smk"
+include: "workflow/rules/trimmomatic.smk"
+include: "workflow/rules/bwa_map.smk"
+include: "workflow/rules/novosort.smk"
+include: "workflow/rules/samtools_call.smk"
 
