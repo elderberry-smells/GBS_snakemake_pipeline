@@ -1,0 +1,50 @@
+in a terminal:
+
+    make sure conda is installed (https://docs.anaconda.com/anaconda/install/)
+
+    create a new environment for running the GBS pipeline based off the gbs.yaml file.  This will install all the versions
+    of the various python, perl, and bioiunformatics software tools used in the pipeline
+
+    $ conda env create -f gbs.yaml
+
+One application can not be installed from the repositories in that environment.  Install novosort V2.00.00 from the Novocraft
+Website:
+
+    http://www.novocraft.com/support/download/
+
+change directory on your terminal to the bin of the environment you have created:
+
+    ex.  On Ubuntu ==>  home/user/anaconda3/envs/gbs/bin/
+
+add the novocraft download to the bin folder, then add that path to your profile:
+
+    $ sudo nano ~/.profile
+
+    add this line to the bottom of the file, then save changes and exit
+
+    export PATH="$PATH:/anaconda3/envs/pipeline/bin/novocraft"
+
+download the snakemake files:
+
+    github clone method
+
+    install from zip file
+
+
+
+
+
+You will need to change a pathway to to include your personal user name for the trimmomatic trim file
+
+    open trimmomatic.smk
+
+    line 5:  trim = "/home/<your_user_name>/anaconda3/envs/gbs/share/trimmomatic-0.39-1/adapters/TruSeq2-PE.fa"
+
+
+Running the tool:
+
+navigate to the folder where Snakefile exists
+
+Reference genome:
+
+
