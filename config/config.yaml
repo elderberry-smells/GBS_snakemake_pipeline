@@ -1,4 +1,0 @@
-sample_read1: "/home/bioinf/PycharmProjects/gbs_pipeline/data/sample3/sample3_R1.fastq"
-samplesheet: "/home/bioinf/PycharmProjects/gbs_pipeline/data/sample3/sample3_samplesheet.txt"
-barcodefile:  "/home/bioinf/PycharmProjects/gbs_pipeline/barcodes/barcodes_192.txt"
-reference_file: "/home/bioinf/PycharmProjects/gbs_pipeline/reference/barley/160404_barley_pseudomolecules_masked.fasta"
