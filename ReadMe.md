@@ -130,13 +130,37 @@ barcodefile:  "workflow/resources/barcodes/barcodes.txt"
 reference_file: "path/to/reference.fasta
 ```
 
-The sample sheet is a tab delimited txt file with 3 columns
+The sample sheet is a tab delimited txt file with 3 columns.  An example of a samplesheet is shown below:
 
-`sample #` `index_name` `sample_id`
+```Sample_number	Index_name	Sample_ID
+1	gbsx001	SK-GBD-001297	
+2	gbsx002	SK-GBD-001298	
+3	gbsx003	SK-GBD-001299	
+4	gbsx004	SK-GBD-001300	
+5	gbsx005	SK-GBD-001301	
+6	gbsx006	SK-GBD-001302	
+7	gbsx007	SK-GBD-001303	
+8	gbsx008	SK-GBD-001304	
+9	gbsx009	SK-GBD-001305
+10	gbsx010	SK-GBD-001306```
 
-The barcode file, as seen in the barcode folder `workflow/resources/barcodes/` are 2 columns, tab delimited txt files
+
+The barcode file, as seen in the barcode folder `workflow/resources/barcodes/` are 2 columns, tab delimited txt files.  This file does not have any headers
 
 `index_name` `barcode`
+
+example barcode file:
+
+```gbsx001	TGACGCCATGCA
+gbsx002	CAGATATGCA
+gbsx003	GAAGTGTGCA
+gbsx004	TAGCGGATTGCA
+gbsx005	TATTCGCATTGCA
+gbsx006	ATAGATTGCA
+gbsx007	CCGAACATGCA
+gbsx008	GGAAGACATTGCA
+gbsx009	GGCTTATGCA
+gbsx010	AACGCACATTTGCA```
 
 ### running the snakemake pipeline on local computer/interactive nodes
 
@@ -187,11 +211,4 @@ $ qsub workflow/resources/gbs.sh
 - this will give you a job number if submitted properly
 - you can check to make sure the program is running by typing `qstat -f`
 - runtime = 4 days?  I don't know yet.
-
-
-
-
- 
-
-
   
