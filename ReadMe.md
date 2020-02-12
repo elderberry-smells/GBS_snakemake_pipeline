@@ -149,7 +149,7 @@ Sample_number	Index_name	Sample_ID
 
 The barcode file, as seen in the barcode folder `workflow/resources/barcodes/` are 2 columns, tab delimited txt files.  This file does not have any headers
 
-`index_name` `barcode`
+`col1: index_name` `col2: barcode`
 
 example barcode file:
 
