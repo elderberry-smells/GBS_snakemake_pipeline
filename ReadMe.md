@@ -134,16 +134,16 @@ The sample sheet is a tab delimited txt file with 3 columns.  An example of a sa
 
 ```
 Sample_number	Index_name	Sample_ID
-1	gbsx001	SK-GBD-001297	
-2	gbsx002	SK-GBD-001298	
-3	gbsx003	SK-GBD-001299	
-4	gbsx004	SK-GBD-001300	
-5	gbsx005	SK-GBD-001301	
-6	gbsx006	SK-GBD-001302	
-7	gbsx007	SK-GBD-001303	
-8	gbsx008	SK-GBD-001304	
-9	gbsx009	SK-GBD-001305
-10	gbsx010	SK-GBD-001306
+1	gbsx001	Sample1	
+2	gbsx002	Sample2	
+3	gbsx003	Sample3	
+4	gbsx004	Sample4	
+5	gbsx005	Sample5	
+6	gbsx006	Sample6	
+7	gbsx007	Sample7	
+8	gbsx008	Sample8	
+9	gbsx009	Sample9
+10	gbsx010	Sample10
 ```
 
 
