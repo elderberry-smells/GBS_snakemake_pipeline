@@ -1,10 +1,9 @@
 def parse_samplesheet(sample_sheet):
     '''open samplesheet and grab relevant sample names.  Format of the sample sheet (tab delimited):
-    sample #    index   sample_id'''
+    Sample_number	Index_name	Sample_ID'''
 
     index = []
     samples = []
-    ref_path = []
     with open(samplesheet, 'r') as samps:
         next(samps)  # skip the header line
         lines = samps.readlines()
@@ -12,8 +11,7 @@ def parse_samplesheet(sample_sheet):
             data = line.split()
             index.append(data[1])
             samples.append(data[2])
-
-
+            
     return index, samples
 
 
