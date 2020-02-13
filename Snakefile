@@ -1,6 +1,6 @@
 def parse_samplesheet(sample_sheet):
     '''open samplesheet and grab relevant sample names.  Format of the sample sheet (tab delimited):
-    sample #    index   sample_id   reference_path'''
+    sample #    index   sample_id'''
 
     index = []
     samples = []
@@ -12,9 +12,9 @@ def parse_samplesheet(sample_sheet):
             data = line.split()
             index.append(data[1])
             samples.append(data[2])
-            ref_path.append(data[3])
 
-    return index, samples, ref_path
+
+    return index, samples
 
 
 def bam_list(path, sample_list):
@@ -37,7 +37,7 @@ read1 = config["sample_read1"]
 path_name, base_name = os.path.split(read1)
 
 # read the sample sheet and parse the data you need out of it into variables
-index, samples, ref_path = parse_samplesheet(samplesheet)
+index, samples= parse_samplesheet(samplesheet)
 
 bams = bam_list(path_name, samples)  # create a list of bams to be run through mpileup at end stage
 
