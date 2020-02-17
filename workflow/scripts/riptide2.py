@@ -207,7 +207,7 @@ def insert_fqdata(fastq, db_path, read_num, barcode_dict):
                     sequence = str(record['sequence'])
                     quality = str(record['quality'])
                     query = f'''SELECT index_name FROM records WHERE record_id="{run_id}"'''
-                    fetched = conn.execute(query).fetchall()
+                    fetched = db.execute(query).fetchall()
                     index_name = fetched[0][0]
 
                     insert_data = f'UPDATE {index_name} SET record_val2="{run_val}",' \
