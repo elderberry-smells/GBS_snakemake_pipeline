@@ -212,16 +212,16 @@ def insert_fqdata(fastq, db_path, read_num, barcode_dict):
                     index_name, slicer = parse_read1(record, barcode_dict)
                     barcode_dict[index_name][1] += 1  # add instance of the index being counted into the barcode dict
 
-                    sequence = record['sequence'][slicer:]  # cut off the index, leaving just TCGA at start of sequence
-                    quality = record['quality'][slicer:]  # cut off the same amount of quality scores
+                    sequence = str(record['sequence'][slicer:])  # cut off the index, leaving just TCGA at start of sequence
+                    quality = str(record['quality'][slicer:])  # cut off the same amount of quality scores
                     run_id = str(record['name']).split(' ')[0]
                     run_val = str(record['name']).split(' ')[1]
 
                     # insert statements for the read 1, inserting data into read1 table and unmatched table
                     insert_data = f'''INSERT INTO {index_name} (record_id1, record_val1, sequence1, quality1) ''' \
-                                  f'''VALUES ('{run_id}', '{run_val}', '{sequence}', '{quality}')'''
+                                  f'''VALUES ("{run_id}", "{run_val}", """{sequence}""", """{quality}""")'''
                     unmatched_data = f'''INSERT INTO unmatched (record_id1, record_val1, sequence1, quality1) ''' \
-                                     f'''VALUES ('{run_id}', '{run_val}', '{record["sequence"]}', '{record["quality"]}')'''
+                                     f'''VALUES ("{run_id}", "{run_val}", """{record['sequence']}""", """{record['quality']}""")'''
                     insert_index = f'INSERT INTO records (record_id, index_name) VALUES ("{run_id}", "{index_name}")'
 
                     if index_name != 'unmatched':  # index was found, insert into proper table
