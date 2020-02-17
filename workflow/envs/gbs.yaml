@@ -1,8 +1,8 @@
 name: gbs
 channels:
-  - anaconda
   - conda-forge
   - bioconda
+  - anaconda
   - defaults
 dependencies:
   - _libgcc_mutex=0.1=main
