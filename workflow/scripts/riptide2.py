@@ -384,6 +384,5 @@ if __name__ == '__main__':
 
     # write the stdout for the barcodes founds in the file.  total reads, etc.
     write_outstats(st_time=None, fastq_path=fastq_file1, bcode_file=barcode_file, bcode_dict=barcodes)
-    conn.close()
 
     os.remove(f"{os.path.split(fastq_file1)[0]}/temp.db")
