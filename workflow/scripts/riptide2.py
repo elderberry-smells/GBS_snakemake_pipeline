@@ -217,7 +217,6 @@ def insert_fqdata(fastq, db_path, read_num, barcode_dict):
                 lines = []  # reset the lines at end of loop
 
     db.execute('''END TRANSACTION''')
-    db.commit()
     db.close()
 
 
