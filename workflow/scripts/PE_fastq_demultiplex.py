@@ -95,7 +95,7 @@ def create_tempsql(connection, barcode_dict):
     # create 192 tables for each index in the barcode list, with room for each read
     for ind_name, ind_bcode in barcode_dict.items():
         table_make = f'CREATE TABLE IF NOT EXISTS {ind_name} (record_id1 TEXT UNIQUE, record_val1 TEXT, sequence1 TEXT, ' \
-                     f'quality1 TEXT, record_val2 TEXT, sequence2 TEXT, quality2 TEXT)'
+                     f'quality1 BLOB, record_val2 TEXT, sequence2 TEXT, quality2 BLOB)'
 
         connection.execute(table_make)
 
