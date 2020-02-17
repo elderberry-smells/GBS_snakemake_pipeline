@@ -76,7 +76,7 @@ def db_connection(db_path):
     :return: database connection (db.cursor())
     """
     # create a temp SQLite database connection that houses the temp data for writing new fastq files
-    sql = sqlite3.connect(f"{db_path}/:memory:")
+    sql = sqlite3.connect(":memory:")
     sql.isolation_level = None  # turn on auto commit
     connection = sql.cursor()  # create connection to database
     connection.execute("PRAGMA cache_size=100000")  # add in parameters for max batch sizes of 100,000
