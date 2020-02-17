@@ -237,7 +237,7 @@ def insert_fqdata(fastq, db, read_num, barcode_dict):
                     sequence = str(record['sequence'])
                     quality = str(record['quality'])
                     query = f'''SELECT index_name FROM records WHERE record_id="{run_id}"'''
-                    fetched = conn.execute(query).fetchall()
+                    fetched = db.execute(query).fetchall()
                     index_name = fetched[0][0]
 
                     insert_data = f'UPDATE {index_name} SET record_val2="{run_val}",' \
@@ -411,5 +411,3 @@ if __name__ == '__main__':
     # write the stdout for the barcodes founds in the file.  total reads, etc.
     write_outstats(st_time=None, fastq_path=fastq_file1, bcode_file=barcode_file, bcode_dict=barcodes)
     conn.close()
-
-    os.remove(f"{os.path.split(fastq_file1)[0]}/temp.db")
