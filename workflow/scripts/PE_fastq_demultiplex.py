@@ -86,19 +86,6 @@ def db_connection(db_path):
     return connection
 
 
-def mysql_connection(db_path):
-    """
-    create a temp database based on the path above, and return a connection after creating some tables in the database
-    :param db_path:
-    :return: a cursor to the database
-    """
-    db = mysql.connect(
-        host = "localhost",
-        user = "bioinf",
-        password = "RPI",
-    )
-
-
 def create_tempsql(connection, barcode_dict):
     """create the temp database"""
 
