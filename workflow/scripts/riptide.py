@@ -87,7 +87,7 @@ def db_connection(db_path):
 def create_tempsql(connection, barcode_dict):
     """create the temp database"""
 
-    conn.execute('''CREATE TABLE IF NOT EXISTS records (
+    connection.execute('''CREATE TABLE IF NOT EXISTS records (
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         record_id TEXT UNIQUE, 
         index_name TEXT)''')
@@ -159,7 +159,7 @@ def parse_read1(seq_record, bcode_dict):
         return return_name[0]
 
 
-def insert_fqdata(fastq, db, read_num, barcode_dict):
+def insert_fqdata(fastq, db_path, read_num, barcode_dict):
     """
     read through the fastq files and insert the data into the database, done in batches of 100,000 lines at a time.
     :param fastq:  the fastq file you would like to read and pass into database
@@ -168,6 +168,7 @@ def insert_fqdata(fastq, db, read_num, barcode_dict):
     :param barcode_dict: the dictionary for the barcodes in the samplesheet
     :return: updated barcode dict
     """
+    db = db_connection(db_path)
     db.execute("BEGIN TRANSACTION")  # start transaction so we only insert data when we reach size size
 
     with open(fastq, 'r') as fq:
@@ -181,10 +182,7 @@ def insert_fqdata(fastq, db, read_num, barcode_dict):
                 if read_num == 1:
                     index_name = parse_read1(record, barcode_dict)
                     barcode_dict[index_name][1] += 1  # add instance of the index being counted into the barcode dict
-
-                    #sequence = record['sequence'][20:]  # cut off the index, leaving just TCGA at start of sequence
                     sequence = record['sequence']
-                    #quality = record['quality'][20:]  # cut off the same amount of quality scores
                     quality = record['quality']
                     run_id = str(record['name']).split(' ')[0]
                     run_val = str(record['name']).split(' ')[1]
@@ -220,6 +218,7 @@ def insert_fqdata(fastq, db, read_num, barcode_dict):
                 lines = []  # reset the lines at end of loop
 
     db.execute('''END TRANSACTION''')
+    db.close()
 
 
 def savefile_handle(fastq_path, sample_name):
@@ -247,7 +246,7 @@ def savefile_handle(fastq_path, sample_name):
     return save_handle
 
 
-def write_fq(save_handle, db, type_fq, index_name=None):
+def write_fq(save_handle, db_path, type_fq, index_name=None):
     """write the query out to a seperate .fastq file for each index in the file
     :param save_handle: the name of the file you want to write out
     :param db: database connection
@@ -255,6 +254,8 @@ def write_fq(save_handle, db, type_fq, index_name=None):
     :param index_name:  the index to query on in database
     :return writes out the fastq file into the demultiplexed folder
     """
+    db = db_connection(db_path)
+
     # combine these into 1 query, write open both files, and write both files line by line (not with open())
     if type_fq == 'unmatched':
         save_handle2 = save_handle.replace(".1.", ".2.")
@@ -289,6 +290,8 @@ def write_fq(save_handle, db, type_fq, index_name=None):
 
         r1.close()
         r2.close()
+
+    db.close()
 
 
 def write_outstats(st_time, fastq_path, bcode_file, bcode_dict):
@@ -360,30 +363,31 @@ if __name__ == '__main__':
     barcodes, samples = make_dicts(barcode_file, sample_file)
 
     # create a temp SQLite database connection that houses the temp data for writing new fastq files
-    conn = db_connection(os.path.split(fastq_file1)[0])
-    create_tempsql(conn, barcodes)
+    db_path = os.path.split(fastq_file1)[0]
+    db = db_connection(db_path)
+    create_tempsql(db, barcodes)
+    db.close()
 
     #################################### demultiplex read1 and read2 fastq data ########################################
 
-    insert_fqdata(fastq_file1, conn, read_num=1, barcode_dict=barcodes)  # insert the read1 data into sqlite db
+    insert_fqdata(fastq_file1, db_path, read_num=1, barcode_dict=barcodes)  # insert the read1 data into sqlite db
 
-    insert_fqdata(fastq_file2, conn, read_num=2, barcode_dict=barcodes)  # insert the read2 data into sqlite db
+    insert_fqdata(fastq_file2, db_path, read_num=2, barcode_dict=barcodes)  # insert the read2 data into sqlite db
 
     # parse the database and split up the data into separate fastq files based on index_name
     for key, val in samples.items():
         # write read1 and 2 per index in the sample sheet
         save_name = savefile_handle(fastq_file1, sample_name=val)
-        write_fq(save_name, conn, type_fq='matched', index_name=key)
+        write_fq(save_name, db_path, type_fq='matched', index_name=key)
 
     # generate the name for unmatched files an write out the unmatched data
     unmatched_data = savefile_handle(fastq_file1, sample_name='unmatched')
-    write_fq(unmatched_data, conn, type_fq='unmatched')
+    write_fq(unmatched_data, db_path, type_fq='unmatched')
 
     ####################################  write out stats, close program ###############################################
 
     # write the stdout for the barcodes founds in the file.  total reads, etc.
     write_outstats(st_time=None, fastq_path=fastq_file1, bcode_file=barcode_file, bcode_dict=barcodes)
-    conn.close()
 
-    os.remove(f"{os.path.split(fastq_file1)[0]}/temp.db")
+   # os.remove(f"{os.path.split(fastq_file1)[0]}/temp.db")
 

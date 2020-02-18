@@ -21,6 +21,7 @@ import sqlite3
 import gzip
 import shutil
 
+
 def get_arguments():
     parser = argparse.ArgumentParser(description='Demultiplex a fastq file into individual sample files')
     parser.add_argument('-f', '--fastq', help='fastq file. Format: path/to/file.fastq.  Use R1 path')
@@ -86,19 +87,6 @@ def db_connection(db_path):
     return connection
 
 
-def mysql_connection(db_path):
-    """
-    create a temp database based on the path above, and return a connection after creating some tables in the database
-    :param db_path:
-    :return: a cursor to the database
-    """
-    db = mysql.connect(
-        host = "localhost",
-        user = "bioinf",
-        password = "RPI",
-    )
-
-
 def create_tempsql(connection, barcode_dict):
     """create the temp database"""
 
@@ -153,7 +141,7 @@ def parse_read1(seq_record, bcode_dict):
     sequence = str(seq_record['sequence'])
     bcode = re.search('TGCA', sequence)  # get everything up to (and including) the TGCA of the barcode
 
-    if bcode:
+    if bcode:  # found TGCA in sequence
         numbers = bcode.span()  # get the start and finish locations of TGCA
 
         # some barcodes have 2 TGCA in sequence, has to have AT LEAST 5 bases before TGCA for it to be proper index
@@ -163,11 +151,13 @@ def parse_read1(seq_record, bcode_dict):
                 new_span = bcode.span()
                 numbers = (new_span[0] + numbers[1], new_span[1] + numbers[1])
             else:
+                f.write('DIDNT EVEN TRY TO MATCH UP\n')
                 return 'unmatched', 0
 
         if numbers[1] in range(9, 15):  # the proper length of barcode is 9 - 14 base pairs
 
             index = sequence[0:numbers[1]]  # grab just the index + TGCA from sequence
+            f.write(f'{index}\n')
             cut_index = numbers[0]
             bcode_len = len(index)
 
@@ -213,24 +203,39 @@ def insert_fqdata(fastq, db_path, read_num, barcode_dict):
     :return: updated barcode dict
     """
     db = db_connection(db_path)
-    db.execute("BEGIN TRANSACTION")  # start transaction so we only insert data when we reach size
+    db.execute("BEGIN TRANSACTION")  # start transaction so we only insert data when we reach size size
 
     with open(fastq, 'r') as fq:
         lines = []
-
+        id1 = 0
+        id2 = 0
         for line in fq:
             lines.append(line.rstrip())
             if len(lines) == 4:
                 record = process(lines)
 
                 if read_num == 1:
-
                     index_name, slicer = parse_read1(record, barcode_dict)
                     barcode_dict[index_name][1] += 1  # add instance of the index being counted into the barcode dict
 
                     sequence = str(record['sequence'][slicer:]) # cut off the index, leaving just TCGA at start of sequence
                     quality = str(record['quality'][slicer:])  # cut off the same amount of quality scores
+                    if 'J' or 'K' in quality:  # uses the older quality scores which don't exist anymore (cut off is 40)
+                        quality = quality.replace("J", "I")
+                        quality = quality.replace("K", "I")
                     run_id = str(record['name']).split(' ')[0]
+
+                    ##########  this stuff can be deleted once you have all the in-house stuff dealt with ###################
+
+                    # if that is not a unique entry and the coordinates are 0:0, then we need to fake them.
+                    if '0:0' in run_id:
+                        data = run_id.split(':')
+                        # x coordinate is data[5] and y coordinate is data[6]
+                        run_id = f'{data[0]}:{data[1]}:{data[2]}:{data[3]}:{data[4]}:input{id1}:input{id2}'
+                        id1 += 1
+                        id2 += 1
+                    ##########################################################################################################
+
                     run_val = str(record['name']).split(' ')[1]
 
                     # insert statements for the read 1, inserting data into read1 table and unmatched table
@@ -253,19 +258,33 @@ def insert_fqdata(fastq, db_path, read_num, barcode_dict):
                     run_val = str(record['name']).split(' ')[1]
                     sequence = str(record['sequence'])
                     quality = str(record['quality'])
+                    if 'J' or 'K' in quality:  # uses the older quality scores which don't exist anymore (cut off is 40)
+                        quality = quality.replace("J", "I")
+
+                    ##########  this stuff can be deleted once you have all the in-house stuff dealt with ###################
+
+                    # if that is not a unique entry and the coordinates are 0:0, then we need to fake them.
+                    if '0:0' in run_id:
+                        data = run_id.split(':')
+                        # x coordinate is data[5] and y coordinate is data[6]
+                        run_id = f'{data[0]}:{data[1]}:{data[2]}:{data[3]}:{data[4]}:input{id1}:input{id2}'
+                        id1 += 1
+                        id2 += 1
+                    ##########################################################################################################
 
                     query = f'''SELECT index_name FROM records WHERE record_id="{run_id}"'''
                     fetched = db.execute(query).fetchall()
                     index_name = fetched[0][0]
 
-                    insert_data = f'''UPDATE {index_name} SET record_val2="{run_val}",''' \
-                                  f''' sequence2="{sequence}", quality2="{quality}" WHERE record_id1="{run_id}" '''
+                    insert_data = f'UPDATE {index_name} SET record_val2="{run_val}",' \
+                                  f' sequence2="{sequence}", quality2="{quality}" WHERE record_id1="{run_id}" '
                     db.execute(insert_data)
 
                 lines = []  # reset the lines at end of loop
 
     db.execute('''END TRANSACTION''')
     db.close()
+
 
 def savefile_handle(fastq_path, sample_name):
     """
@@ -300,9 +319,8 @@ def write_fq(save_handle, db_path, type_fq, index_name=None):
     :param index_name:  the index to query on in database
     :return writes out the fastq file into the demultiplexed folder
     """
-    # combine these into 1 query, write open both files, and write both files line by line (not with open())
     db = db_connection(db_path)
-
+    # combine these into 1 query, write open both files, and write both files line by line (not with open())
     if type_fq == 'unmatched':
         save_handle2 = save_handle.replace(".1.", ".2.")
         fq_data = list(db.execute('''SELECT * FROM unmatched''').fetchall())
@@ -338,6 +356,7 @@ def write_fq(save_handle, db_path, type_fq, index_name=None):
         r2.close()
 
     db.close()
+
 
 def write_outstats(st_time, fastq_path, bcode_file, bcode_dict):
     """
@@ -413,6 +432,7 @@ if __name__ == '__main__':
     create_tempsql(conn, barcodes)
     conn.close()
 
+    f = open('data/sinapis/barcodes.txt', 'w')
 
     #################################### demultiplex read1 and read2 fastq data ########################################
 
@@ -434,6 +454,5 @@ if __name__ == '__main__':
 
     # write the stdout for the barcodes founds in the file.  total reads, etc.
     write_outstats(st_time=None, fastq_path=fastq_file1, bcode_file=barcode_file, bcode_dict=barcodes)
-    conn.close()
-
+    f.close()
     os.remove(f"{os.path.split(fastq_file1)[0]}/temp.db")
