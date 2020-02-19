@@ -1,6 +1,6 @@
 rule bwa_map:
     input:
-        ref = config["reference_file"],
+        ref = ref_genome,
         r1 = "trimmomatic/{sample}.1.paired.fastq",
         r2 = "trimmomatic/{sample}.2.paired.fastq"
     output:
