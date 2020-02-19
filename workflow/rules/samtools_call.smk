@@ -1,7 +1,7 @@
 rule samtools_call:
     input:
         expand("sorted_reads/{sample}.sorted.bam", sample=samples),
-        ref = config["reference_file"],
+        ref = ref_genome,
         bammies = bams
     output:
         "calls/snps.raw.vcf.gz"
