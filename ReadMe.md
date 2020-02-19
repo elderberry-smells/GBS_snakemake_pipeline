@@ -24,8 +24,7 @@
 and dowloading the zip file.  
 - in your home directory on the cluster/local computer create a directory for the pipeline to live called `gbs` 
 ```shell script
-$ mkdir gbs
-$ cd gbs/
+$ mkdir gbs & cd gbs/
 ```
 ### clone 
 > you will need git installed on your computer to accomplish this.  Can be done using `conda install -c anaconda git` on your cluster account.
