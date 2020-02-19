@@ -207,7 +207,7 @@ Job counts:
 $ snakemake -j 16
 ``` 
 
-###  Running the program on the cluster with qsub using shell script from `gbs.sh`
+###  Running the program on the cluster with qsub using shell script from `workflow/resources/gbs.sh`
 - from the head node, navigate to the folder with the snakefile.  Make sure your `config/config.yaml` is updated first!
 ```shell script
 $ cd gbs/GBS_snakemake_pipeline/
