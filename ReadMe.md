@@ -15,7 +15,7 @@
 - [Installation](#installation)
 - [Features](#features)
 - [Usage](#usage)
-- [running the pipeline](#'Running the pipeline')
+- [running the pipeline](#Executing)
 - [Team](#team)
 - [License](#license)
 
@@ -167,7 +167,7 @@ gbsx010	AACGCACATTTGCA
 ##### workflow/rules/trimmomatic.smk
 - line 5
 
-## Running the pipeline
+## Executing
 
 ### Using interactive node (not recommended for large files)
 
