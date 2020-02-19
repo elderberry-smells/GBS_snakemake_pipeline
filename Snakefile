@@ -27,9 +27,11 @@ def bam_list(path, sample_list):
 
 
 # read in the config file to get pathways/samples into variables
-configfile: "~/gbs/GBS_snakemake_pipeline/config/config.yaml"
+configfile: "/home/AAFC-AAC/your_user_name/gbs/GBS_snakemake_pipeline/config/config.yaml"
 samplesheet = config["samplesheet"]
 read1 = config["sample_read1"]
+barcodes_file = config["barcodefile"]
+ref_genome = config["reference_file"]
 
 # get the pathway from the read1 fastq file, this is where we want to run the pipeline (set working dir)
 path_name, base_name = os.path.split(read1)
@@ -47,8 +49,8 @@ rule all:
     input:
         "calls/snps.raw.vcf.gz"  # final output is a single vcf file
 
-include: "~/gbs/GBS_snakemake_pipeline/workflow/rules/demultiplex.smk"
-include: "~/gbs/GBS_snakemake_pipeline/workflow/rules/trimmomatic.smk"
-include: "~/gbs/GBS_snakemake_pipeline/workflow/rules/bwa_map.smk"
-include: "~/gbs/GBS_snakemake_pipeline/workflow/rules/novosort.smk"
-include: "~/gbs/GBS_snakemake_pipeline/workflow/rules/samtools_call.smk"
+include: "/home/AAFC-AAC/your_user_name/gbs/GBS_snakemake_pipeline/workflow/rules/demultiplex.smk"
+include: "/home/AAFC-AAC/your_user_name/gbs/GBS_snakemake_pipeline/workflow/rules/trimmomatic.smk"
+include: "/home/AAFC-AAC/your_user_name/gbs/GBS_snakemake_pipeline/workflow/rules/bwa_map.smk"
+include: "/home/AAFC-AAC/your_user_name/gbs/GBS_snakemake_pipeline/workflow/rules/novosort.smk"
+include: "/home/AAFC-AAC/your_user_name/gbs/GBS_snakemake_pipeline/workflow/rules/samtools_call.smk"
