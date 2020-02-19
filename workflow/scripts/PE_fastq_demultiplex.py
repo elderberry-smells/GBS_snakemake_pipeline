@@ -100,6 +100,7 @@ def create_tempsql(connection, barcode_dict):
                      f'quality1 BLOB, record_val2 TEXT, sequence2 TEXT, quality2 BLOB)'
 
         connection.execute(table_make)
+    connection.close()
 
 
 def unzipper(fastq):
@@ -251,7 +252,7 @@ def insert_fqdata(fastq, db_path, read_num, barcode_dict):
 
                 lines = []  # reset the lines at end of loop
 
-    db.execute('''END TRANSACTION''')
+    db.execute('''COMMIT''')
     db.close()
 
 def savefile_handle(fastq_path, sample_name):
@@ -398,8 +399,6 @@ if __name__ == '__main__':
     db_path = os.path.split(fastq_file1)[0]
     conn = db_connection(db_path)
     create_tempsql(conn, barcodes)
-    conn.close()
-
 
     #################################### demultiplex read1 and read2 fastq data ########################################
 
@@ -421,6 +420,5 @@ if __name__ == '__main__':
 
     # write the stdout for the barcodes founds in the file.  total reads, etc.
     write_outstats(st_time=None, fastq_path=fastq_file1, bcode_file=barcode_file, bcode_dict=barcodes)
-    conn.close()
 
     os.remove(f"{os.path.split(fastq_file1)[0]}/temp.db")
