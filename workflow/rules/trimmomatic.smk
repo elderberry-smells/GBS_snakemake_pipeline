@@ -2,7 +2,7 @@ rule trimmomatic:
     input:
         f1 = "demultiplex/{sample}.1.fastq",
         f2 = "demultiplex/{sample}.2.fastq",
-        trim = "~/miniconda3/envs/gbs/share/trimmomatic-0.39-1/adapters/TruSeq2-PE.fa"
+        trim = "/home/AAFC-AAC/your_user_name/miniconda3/envs/gbs/share/trimmomatic-0.39-1/adapters/TruSeq2-PE.fa"
     output:
         p1 = "trimmomatic/{sample}.1.paired.fastq",
         u1 = "trimmomatic/{sample}.1.unpaired.fastq",
