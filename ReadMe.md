@@ -15,23 +15,27 @@
 - [Installation](#installation)
 - [Features](#features)
 - [Usage](#usage)
+- [running the pipeline](#Running the pipeline)
 - [Team](#team)
 - [License](#license)
 
 ## Installation
-> download the repository, either using [git clone](#clone) or by clicking `clone or download` on the main page of the repository
+> download the repository using [git clone](#clone) or by clicking `clone or download` on the main page of the repository
 and dowloading the zip file.  
 - in your home directory on the cluster/local computer create a directory for the pipeline to live called `gbs` 
 ```shell script
 $ mkdir gbs
 $ cd gbs/
 ```
+### clone 
+> you will need git installed on your computer to accomplish this.  Can be done using `conda install -c anaconda git` on your cluster account.
+- Use the `git clone` process to make an exact copy of the current repository
+- clone this repository to your local machine using the following:
 
-- once you have the file downloaded, transfer it using rsync (if moving from mac or linux) or WinSCP (if using windows) to your computer/cluster into the `gbs` directory and unzip it
 ```shell script
-$ gzip -d GBS_snakemake_pipeline
-``` 
-- once unzipped you should have the following pathways for the pipeline:
+$ git clone https://github.com/elderberry-smells/GBS_snakemake_pipeline.git
+```
+- press `enter`, your local clone should be created with the following pathways for the pipeline:
 
     - `~/gbs/GBS_snakemake_pipeline/snakefile`
     - `~/gbs/GBS_snakemake_pipeline/config/`
@@ -39,21 +43,6 @@ $ gzip -d GBS_snakemake_pipeline
     - `~/gbs/GBS_snakemake_pipeline/workflow/rules/`
     - `~/gbs/GBS_snakemake_pipeline/workflow/scripts/`
  
-
-### clone 
-> you will need git installed on your computer to accomplish this.  Can be done using `conda install -c anaconda git`
-- clone this repository to your local machine using the following HTTPS link:
-
-`https://github.com/elderberry-smells/GBS_snakemake_pipeline.git`
-
--  change to the directory you want to clone the repository to
-
-- type `git clone` and then paste the HTTPS link from above 
-```shell script
-$ git clone https://github.com/elderberry-smells/GBS_snakemake_pipeline.git
-```
-- press `enter`, your local clone should be created with same folder structure as seen in [Installation](#Installation)
-
 ### installing the GBS snakemake environment on your computer
 - ensure you are running the most recent version of conda (if you can)
 ```shell script
@@ -73,11 +62,12 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
 `bcftools=1.8`
 `Novosort=2.00.00`
 
-- install novosort from their website [Novocraft Downloads](http://novocraft.com/support/download/)
-    - unzip the novocraft folder into a destination of your choice (the bin of the environment you are using is often a suitable place)
+- move the novosort folder to your newly created gbs environment bin
     
-    `~/miniconda3/envs/gbs/bin/`
-    
+    ```shell script
+    $ mv workflow/resources/novocraft/ ~/miniconda3/envs/gbs/bin/
+    ```
+      
     - add that folder to your profile so novosort is a callable command
     
     ```shell script
@@ -124,10 +114,10 @@ The snakemake tool is structured in a way that you need only activate the enviro
 The config file is 4 lines, all required inputs for the snakefile to work properly
 
 ```
-sample_read1: "/path/to/sample_R1.fastq"
-samplesheet: "path/to/samplesheet.txt"
+sample_read1: "/absolute/path/to/sample_R1.fastq"
+samplesheet: "/absolute/path/to/samplesheet.txt"
 barcodefile:  "workflow/resources/barcodes/barcodes.txt"
-reference_file: "path/to/reference.fasta
+reference_file: "/absolute/path/to/reference.fasta
 ```
 
 The sample sheet is a tab delimited txt file with 3 columns.  An example of a samplesheet is shown below:
@@ -166,7 +156,20 @@ gbsx009	GGCTTATGCA
 gbsx010	AACGCACATTTGCA
 ```
 
-### running the snakemake pipeline on local computer/interactive nodes
+### Some minor changes to the snakefile and rule files to include your user name
+- You will have to edit the file to reflect your username in the scripts before it will run.  You can do this with whichever editor you would like, `nano` would be fine for these small edits.  
+- replace /home/AAFC-AAC/`your_user_name`/gbs... with your actual username
+##### Snakefile
+-  line 30
+-  line 52 - 56 
+##### workflow/rules/demultiplex.smk
+- line 10
+##### workflow/rules/trimmomatic.smk
+- line 5
+
+## Running the pipeline
+
+### Using interactive node (not recommended for large files)
 
 Update the `config/config.yaml` file to direct the pipeline to the resources it needs.
 
@@ -206,13 +209,13 @@ Job counts:
 $ snakemake -j 16
 ``` 
 
-### Running the program on the cluster with qsub using shell script from `gbs.sh`
-- from the head node, navigate to the folder with the snakefile
+###  Running the program on the cluster with qsub using shell script from `gbs.sh`
+- from the head node, navigate to the folder with the snakefile.  Make sure your `config/config.yaml` is updated first!
 ```shell script
 $ cd gbs/GBS_snakemake_pipeline/
 $ qsub workflow/resources/gbs.sh
 ```
 - this will give you a job number if submitted properly
 - you can check to make sure the program is running by typing `qstat -f`
-- runtime = 4 days?  I don't know yet.
+- runtime = 5ish days.  Working on a faster demux with threading to cut a day off.  
   
