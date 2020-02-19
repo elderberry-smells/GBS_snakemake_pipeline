@@ -15,7 +15,7 @@
 - [Installation](#installation)
 - [Features](#features)
 - [Usage](#usage)
-- [running the pipeline](#Running the pipeline)
+- [running the pipeline](#'Running the pipeline')
 - [Team](#team)
 - [License](#license)
 
