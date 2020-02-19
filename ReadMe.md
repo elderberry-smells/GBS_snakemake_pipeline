@@ -77,6 +77,16 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
     
     `export PATH="$PATH:~/miniconda3/envs/gbs/bin/novocraft"` 
 
+### Some minor changes to the snakefile and rule files to include your user name
+- You will have to edit the file to reflect your username in the scripts before it will run.  You can do this with whichever editor you would like, `nano` would be fine for these small edits.  
+- replace /home/AAFC-AAC/`your_user_name`/gbs... with your actual username
+##### Snakefile
+-  line 30
+-  line 52 - 56 
+##### workflow/rules/demultiplex.smk
+- line 10
+##### workflow/rules/trimmomatic.smk
+- line 5
 
 ## Features
 
@@ -155,17 +165,6 @@ gbsx008	GGAAGACATTGCA
 gbsx009	GGCTTATGCA
 gbsx010	AACGCACATTTGCA
 ```
-
-### Some minor changes to the snakefile and rule files to include your user name
-- You will have to edit the file to reflect your username in the scripts before it will run.  You can do this with whichever editor you would like, `nano` would be fine for these small edits.  
-- replace /home/AAFC-AAC/`your_user_name`/gbs... with your actual username
-##### Snakefile
--  line 30
--  line 52 - 56 
-##### workflow/rules/demultiplex.smk
-- line 10
-##### workflow/rules/trimmomatic.smk
-- line 5
 
 ## Executing
 
