@@ -30,7 +30,7 @@ def bam_list(path, sample_list):
 configfile: "/home/AAFC-AAC/your_user_name/gbs/GBS_snakemake_pipeline/config/config.yaml"
 samplesheet = config["samplesheet"]
 read1 = config["sample_read1"]
-barcodes_file = config["barcodefile"]
+barcode_file = config["barcodefile"]
 ref_genome = config["reference_file"]
 
 # get the pathway from the read1 fastq file, this is where we want to run the pipeline (set working dir)
