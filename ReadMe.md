@@ -64,7 +64,7 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
 - move the novosort folder to your newly created gbs environment bin
     
     ```shell script
-    $ mv workflow/resources/novocraft/ ~/miniconda3/envs/gbs/bin/
+    $ mv GBS_snakemake_pipeline/workflow/resources/novocraft/ ~/miniconda3/envs/gbs/bin/
     ```
       
     - add that folder to your profile so novosort is a callable command
