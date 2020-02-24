@@ -273,7 +273,7 @@ if __name__ == '__main__':
 
     ############### demultiplex read1 and read2 fastq data using multiprocessing tool concurrent.futures  ##############
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=available_cpus) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=32) as executor:
         # pass in list of fastqs to process and be assigned to other CPUs
         future_to_fq = executor.map(split_fq, fq_read1)
 
