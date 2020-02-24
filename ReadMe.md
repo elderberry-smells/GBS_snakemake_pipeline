@@ -13,6 +13,7 @@
 ## Table of Contents
 
 - [Installation](#installation)
+- [Quick Use Guide](#quick-use)
 - [Features](#features)
 - [Usage](#usage)
 - [running the pipeline](#Executing)
@@ -86,6 +87,27 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
 - line 10
 ##### workflow/rules/trimmomatic.smk
 - line 5
+
+## Quick Use Guide
+
+> Once your environment is set up, and the pathways reflect your user name, you can start running the pipeline.
+
+- input files should be sample_R1.fastq.gz and sample_R2.fastq.gz to save space (no need to unzip)
+- save a copy of your samplesheet into the same directory as your fastq files
+
+```shell script
+$  cd gbs/GBS_snakemake_pipeline
+$  nano config/config.txt
+
+cntrl-o to save [enter]
+cntrl-x to exit 
+```
+- change the lines to reflect the inputs you would like to analyze in the pipeline.  Use absolute paths.
+- run the pipeline in the 
+
+```shell script
+$ qsub workflow/resources/gbs.sh
+```
 
 ## Features
 
