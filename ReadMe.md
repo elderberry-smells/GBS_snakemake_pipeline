@@ -202,9 +202,9 @@ Job counts:
 	555
 ```
 
-- run the program with requested cores on local machine or interactive node on cluster 
+- run the program with requested cores on local machine or interactive node on cluster (use nohup in case you need to close terminal) 
 ```shell script
-$ snakemake -j 16
+$ nohup snakemake -j 16
 ``` 
 
 ###  Running the program on the cluster with qsub using shell script from `workflow/resources/gbs.sh`
