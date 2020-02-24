@@ -123,7 +123,6 @@ def parse_index(seq_record, bcode_dict):
         if numbers[1] in range(8, 13):  # the proper length of barcode is 9 - 14 base pairs
 
             index = sequence[0:numbers[1]]  # grab just the index + TGCA from sequence
-            f.write(f'{index}\n')
             cut_index = numbers[0]
             bcode_len = len(index)
 
