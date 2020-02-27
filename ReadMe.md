@@ -243,3 +243,4 @@ $ qsub workflow/resources/gbs.sh
 - Testing and Improvements:  Jana Ebersbach
 
 ## License
+![license](LICENSE.md)
