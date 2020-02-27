@@ -6,9 +6,7 @@
 
 > Utilizes snakemake to complete the process with one command line call
 
-**maybe put in a graphic here (gif) to record how the tools works?  Or put in the dag plot from snakemake**
-
-![workflow](https://github.com/elderberry-smells/GBS_snakemake_pipeline/tree/master/workflow/resources/images/pipeline_workflow_DAG.jpg?raw=true)
+![workflow](workflow/resources/images/pipeline_workflow_DAG.jpg?raw=true "Workflow")
 
 ## Table of Contents
 
