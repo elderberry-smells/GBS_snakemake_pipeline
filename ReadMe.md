@@ -92,18 +92,19 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
 
 > Once your environment is set up, and the pathways reflect your user name, you can start running the pipeline.
 
-- input files should be sample_R1.fastq.gz and sample_R2.fastq.gz to save space (no need to unzip)
-- save a copy of your samplesheet into the same directory as your fastq files
+- input required:
+	- `sample_R1.fastq.gz` `sample_R2.fastq.gz` (no need to unzip)
+	- `samplesheet.txt` for format see samplesheet below
 
+- update the config/config.yaml file.  Use absolute paths.
 ```shell script
 $  cd gbs/GBS_snakemake_pipeline
 $  nano config/config.txt
-
-cntrl-o to save [enter]
-cntrl-x to exit 
 ```
-- change the lines to reflect the inputs you would like to analyze in the pipeline.  Use absolute paths.
-- run the pipeline in the 
+`cntrl-o to save [enter]`
+`cntrl-x to exit`
+
+- run the pipeline by submitting the process to the gridengine queue
 
 ```shell script
 $ qsub workflow/resources/gbs.sh
