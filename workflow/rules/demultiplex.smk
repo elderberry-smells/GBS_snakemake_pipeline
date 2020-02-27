@@ -1,5 +1,7 @@
 rule demultiplex:
     input:
+        chunks1 = expand("chunks/{split_file}", split_file=split_R1),
+        chunks2 = expand("chunks/{split_file}", split_file=split_R2),
         fq = read1,
         bar = barcode_file,
         samp = samplesheet
