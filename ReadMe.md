@@ -8,7 +8,7 @@
 
 **maybe put in a graphic here (gif) to record how the tools works?  Or put in the dag plot from snakemake**
 
-[![Insert your graphic here](home/Desktop/readmeimg.png)]()
+[![Pipeline Wrokflow Visual](https://github.com/elderberry-smells/GBS_snakemake_pipeline/tree/master/workflow/resources/images/pipeline_workflow_DAG.svg)]()
 
 ## Table of Contents
 
