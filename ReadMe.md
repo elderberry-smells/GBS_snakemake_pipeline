@@ -238,3 +238,8 @@ $ qsub workflow/resources/gbs.sh
 - you can check to make sure the program is running by typing `qstat -f`
 - runtime = 5ish days.  Working on a faster demux with threading to cut a day off.  
   
+## Team
+- Author:  Brian James (brian.james4@canada.ca)
+- Testing and Improvements:  Jana Ebersbach
+
+## License
