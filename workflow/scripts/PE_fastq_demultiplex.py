@@ -105,6 +105,9 @@ def parse_index(seq_record, bcode_dict):
     :param bcode_dict:  dictionary of the information on the barcode/index name (index001: bcode, index2: bcode, ...)
     :return: returns the filename/index name from matching up index with barcode file
     """
+    
+    longest = max(len(bcode[0]) for bindex, bcode in bcode_dict.items())
+    shortest = min(len(bcode[0]) for bindex, bcode in bcode_dict.items())
 
     sequence = str(seq_record['sequence'])
     bcode = re.search('TGCA', sequence)  # get everything up to (and including) the TGCA of the barcode
@@ -112,8 +115,13 @@ def parse_index(seq_record, bcode_dict):
     if bcode:
         numbers = bcode.span()  # get the start and finish locations of TGCA
 
-        # some barcodes have 2 TGCA in sequence, has to have AT LEAST 5 bases before TGCA for it to be proper index
-        if numbers[0] < 5:
+        # some barcodes have 2 TGCA in sequence, need a specific number of bases before TGCA to be proper depending on bcode_file.
+        if longest == 14:   # using the newer set of barcodes.  Need a minimum of 5 bases before TGCA to properly match!
+            pre_tgca = 5
+        else:               # using the older set of barcodes.  Need a minimum of 4 bases before TGCA to properly match!
+            pre_tgca = 4
+            
+        if numbers[0] < pre_tgca:  # not the proper amount of bases before TGCA found.  Check if another TGCA in sequence.
             bcode = re.search('TGCA', sequence[numbers[1]:])
             if bcode:
                 new_span = bcode.span()
@@ -121,7 +129,7 @@ def parse_index(seq_record, bcode_dict):
             else:
                 return 'unmatched', 0
 
-        if numbers[1] in range(9, 15):  # the proper length of barcode is 9 - 14 base pairs
+        if numbers[1] in range(shortest, longest+1):  # make sure the result is the proper length of the barcodes provided
 
             index = sequence[0:numbers[1]]  # grab just the index + TGCA from sequence
             cut_index = numbers[0]
