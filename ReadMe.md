@@ -49,8 +49,8 @@ reference_file: "/absolute/path/to/reference.fasta
 $ qsub workflow/resources/gbs.sh
 ```
 
-- this will give you a job number if submitted properly
-- you can check to make sure the program is running by typing `qstat -f`
+- this will give you a job number if submitted properly.  The job will produce snakemake stats (which rule is running) in whatever folder you run the script from (in this case ~/gbs/GBS_snakemake_pipeline) and be named gbs.sh.e<job number>
+- you can check to make sure the program is running by typing `qstat -f`.  If not, check the gbs.sh.e<job number> for why.
 - runtime = 2-3 days for a standard output from Illumina HiSeq.   
 
 ## Installation
