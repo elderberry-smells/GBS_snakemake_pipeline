@@ -9,16 +9,43 @@
 ![workflow](workflow/resources/images/pipeline_workflow_DAG.jpg?raw=true "Workflow")
 
 ## Table of Contents
-
-- [Installation](#installation)
 - [Quick Use Guide](#quick-use-guide)
+- [Installation](#installation)
 - [Features](#features)
 - [Usage](#usage)
 - [running the pipeline](#Executing)
 - [Team](#team)
 - [License](#license)
 
+## Quick Use Guide
+> This is assuming you have followed the installation.  If not, proceed first to [installations](#installation).
+> Once your environment is set up, and the pathways reflect your user name, you can start running the pipeline.
 
+- input required:
+	- `sample_R1.fastq.gz`
+	- `sample_R2.fastq.gz` 
+	- `samplesheet.txt` for format [see samplesheet](#Samplesheet) below
+
+- update the config/config.yaml file.  Use absolute paths.
+```shell script
+$  cd gbs/GBS_snakemake_pipeline
+$  nano config/config.txt
+
+sample_read1: "/absolute/path/to/sample_R1.fastq.gz"
+samplesheet: "/absolute/path/to/samplesheet.txt"
+barcodefile:  "workflow/resources/barcodes/barcodes_192.txt"
+reference_file: "/absolute/path/to/reference.fasta
+
+```
+`cntrl-o to save [enter]`
+
+`cntrl-x to exit`
+
+- run the pipeline by submitting the process to the gridengine queue
+
+```shell script
+$ qsub workflow/resources/gbs.sh
+```
 ## Installation
 > download the repository using [git clone](#clone) or by clicking `clone or download` on the main page of the repository
 and dowloading the zip file.  
@@ -87,27 +114,6 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
 ##### workflow/rules/trimmomatic.smk
 - line 5
 
-## Quick Use Guide
-
-> Once your environment is set up, and the pathways reflect your user name, you can start running the pipeline.
-
-- input required:
-	- `sample_R1.fastq.gz` `sample_R2.fastq.gz` (no need to unzip)
-	- `samplesheet.txt` for format [see samplesheet](#Samplesheet) below
-
-- update the config/config.yaml file.  Use absolute paths.
-```shell script
-$  cd gbs/GBS_snakemake_pipeline
-$  nano config/config.txt
-```
-`cntrl-o to save [enter]`
-`cntrl-x to exit`
-
-- run the pipeline by submitting the process to the gridengine queue
-
-```shell script
-$ qsub workflow/resources/gbs.sh
-```
 
 ## Features
 
@@ -146,9 +152,9 @@ The snakemake tool is structured in a way that you need only activate the enviro
 The config file is 4 lines, all required inputs for the snakefile to work properly
 
 ```
-sample_read1: "/absolute/path/to/sample_R1.fastq"
+sample_read1: "/absolute/path/to/sample_R1.fastq.gz"
 samplesheet: "/absolute/path/to/samplesheet.txt"
-barcodefile:  "workflow/resources/barcodes/barcodes.txt"
+barcodefile:  "workflow/resources/barcodes/barcodes_192.txt"
 reference_file: "/absolute/path/to/reference.fasta
 ```
 
