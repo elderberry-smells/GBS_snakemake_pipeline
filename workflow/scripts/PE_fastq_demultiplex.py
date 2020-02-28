@@ -22,7 +22,6 @@ import multiprocessing
 from multiprocessing import Lock
 
 
-
 def get_arguments():
     parser = argparse.ArgumentParser(description='Demultiplex a fastq file into individual sample files')
     parser.add_argument('-f', '--fastq', help='fastq file. Format: path/to/file.fastq.  Use R1 path')
