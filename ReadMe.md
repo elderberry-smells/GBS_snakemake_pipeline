@@ -14,7 +14,7 @@
 - [Quick Use Guide](#quick-use-guide)
 - [Installation](#installation)
 - [Usage](#usage)
-- [running the pipeline](#Executing)
+- [Running the pipeline](#Executing)
 - [Features](#features)
 - [Team](#team)
 - [License](#license)
@@ -214,29 +214,46 @@ $ nohup snakemake -j 16
 ``` 
 
 ###  Running the program on the cluster with qsub using shell script from `workflow/resources/gbs.sh`
-- go back to the [quick use guide](#quick-use-guide) for instructions on running on cluster
+- go back to the [quick use guide](#quick-use-guide) for instructions on running this on gridengine
 
 
 ## Features
+### brief documentation of what each step in this pipeline accomplishes
 
 This tool utilizes Snakemake to create a cradle-to-grave GBS analysis for paired end reads from Illumina sequencing platforms (2x150).
 
 The tool will commit the following steps in the pipeline, all of which are modular additions to the snakefile and can be swapped if needed with other tools.
 
+#### split
+`input:  fastq_R1.fastq.gz, fastq_R2.fastq.gz`
+
+`output: chunks/fastq_R1_aa.fq...chunks/fastq_R1_zz.fq, chunks/fastq_R2_aa.fq...chunks/fastq_R2_zz.fq`
+
+the program will count the lines in the sample_R1.fastq.gz file and divy that up into split files using `split` command `[default 100M lines for split]`.  Currently can only accomplish split permuations from aa to zz.  Each file will come out of this stage into a newly created chunks/ folder.
+
 #### demultiplex
+`input:  chunks/fastq_R1_aa.fq...chunks/fastq_R1_zz.fq, chunks/fastq_R2_aa.fq...chunks/fastq_R2_zz.fq`
+
+`ouput:  demultiplex/sample_1.1.fastq ... demultiplex/sample_384.1.fastq, demultiplex/sample_1.2.fastq ... demultiplex/sample_384.2.fastq`
+
 In paired end reads, the Fastq read 1 houses the unique identifier barcodes for demultiplexing.  The barcodes in this tool are designed based on the 
 [Poland et. al 2012 GBS protocol](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0032253), and the barcodes being used (up to 384 unique barcodes for multiplexing) can be found in `workflow/resources/barcodes_384.txt`
 
-the barcodes themselves are anywhere between 5 and 14 bp in length, and end in `TCGA` signalling the start to the 
-actual sample sequence.  This tool will demultiplex read 1 and read 2 into seperate files `sample_id.1.fq` and `sample_id.2.fq`
+This tool will demultiplex read 1 and read 2 into seperate files `sample_id.1.fq` and `sample_id.2.fq`.  This process is completed by matching the barcodes in the sequence and appending to the new files in chunks of 25 million sequences at a time (done through the usage of multiprocessing).  The [demux script](https://github.com/elderberry-smells/GBS_snakemake_pipeline/blob/master/workflow/scripts/PE_fastq_demultiplex.py) reads both read 1 and read 2 concurrently, so matching of header information in fastq is important for the process.
 
 #### trimmomatic
+`input: demultiplex/sample_1.1.fastq ... demultiplex/sample_384.1.fastq, demultiplex/sample_1.2.fastq ... demultiplex/sample_384.2.fastq`
+
+`output: trimmomatic/sample_id.1.paired, sample_id.1.unpaired, sample_id.2.paired, sample_id.2.unpaired`
+
 The next step is to pipe the demultiplexed files into the trimmomatic tool.  
 > Trimmomatic is a fast, multithreaded command line tool that can be used to trim and crop
 Illumina (FASTQ) data as well as to remove adapters. These adapters can pose a real problem
 depending on the library preparation and downstream application.
 
-outputs of this file will be `sample_id.1.paired` `sample_id.1.unpaired` `sample_id.2.paired` `sample_id.2.unpaired`
+parameters used in trimmomatic:
+
+`ILLUMINACLIP:{trim_file}:2:40:15 LEADING:15 TRAILING:15 SLIDINGWINDOW:4:15 MINLEN:55`
 
 #### Alignment and Sorting
 
