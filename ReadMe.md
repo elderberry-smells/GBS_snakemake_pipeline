@@ -237,6 +237,7 @@ input:
 
 output:  
 `demultiplex/sample1.1.fastq ... demultiplex/sample384.1.fastq` 
+
 `demultiplex/sample1.2.fastq ... demultiplex/sample384.2.fastq`
 
 In paired end reads, the Fastq read 1 houses the unique identifier barcodes for demultiplexing.  The barcodes in this tool are designed based on the 
@@ -247,10 +248,12 @@ This tool will demultiplex read 1 and read 2 into seperate files `sample_id.1.fq
 #### trimmomatic
 input: 
 `demultiplex/sample1.1.fastq ... demultiplex/sample384.1.fastq`
+
 `demultiplex/sample1.2.fastq ... demultiplex/sample384.2.fastq`
 
 output: 
 `trimmomatic/sample_id.1.paired, trimmomatic/sample_id.1.unpaired`
+
 `trimmomatic/sample_id.2.paired, trimmomatic/sample_id.2.unpaired`
 
 The next step is to pipe the demultiplexed files into the trimmomatic tool.  Trimmomatic is freely available and is a fast, multithreaded command line tool that can be used to trim and crop Illumina (FASTQ) data as well as to remove adapters. 
@@ -262,6 +265,7 @@ parameters used in trimmomatic:
 #### Alignment
 input:
 `trimmomatic/sample_id.1.paired, trimmomatic/sample_id.1.unpaired`
+
 `trimmomatic/sample_id.2.paired, trimmomatic/sample_id.2.unpaired`
 
 output:
@@ -278,6 +282,7 @@ input:
 
 output:
 `sorted_reads/sample1.sorted.bam ... sorted_reads/sample384.sorted.bam`
+
 `sorted_reads/sample1.sorted.bam.bai ... sorted_reads/sample384.sorted.bam.bai`
 
 This rule uses the freely available software Novosort (from Novocraft).  This will sort and index the bam filesfrom the bwa mem rule.  The sorted bam file will move into the SNP calling in the final rule
