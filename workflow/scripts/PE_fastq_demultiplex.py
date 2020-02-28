@@ -198,8 +198,8 @@ def split_fq(fastq):
                 quality = str(record['quality'][slicer:])  # cut off the same amount of quality scores
 
                 # read 2 sliced data
-                sequence2 = str(record2['sequence'][slicer:])  # cut off the index, leaving just TCGA at start
-                quality2 = str(record2['quality'][slicer:])  # cut off the same amount of quality scores
+                sequence2 = str(record2['sequence'])  # no index on read2 so no need to slice sequence like read1
+                quality2 = str(record2['quality'])
 
                 # double check that the run_ids match between read1 and read 2
                 run_id = record['name'].split(' ')[0]
