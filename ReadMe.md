@@ -236,7 +236,8 @@ input:
 `chunks/fastq_R1_aa.fq...chunks/fastq_R1_zz.fq, chunks/fastq_R2_aa.fq...chunks/fastq_R2_zz.fq`
 
 output:  
-`demultiplex/sample1.1.fastq ... demultiplex/sample384.1.fastq, demultiplex/sample1.2.fastq ... demultiplex/sample384.2.fastq`
+`demultiplex/sample1.1.fastq ... demultiplex/sample384.1.fastq` 
+`demultiplex/sample1.2.fastq ... demultiplex/sample384.2.fastq`
 
 In paired end reads, the Fastq read 1 houses the unique identifier barcodes for demultiplexing.  The barcodes in this tool are designed based on the 
 [Poland et. al 2012 GBS protocol](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0032253), and the barcodes being used (up to 384 unique barcodes for multiplexing) can be found in `workflow/resources/barcodes_384.txt`
@@ -245,14 +246,14 @@ This tool will demultiplex read 1 and read 2 into seperate files `sample_id.1.fq
 
 #### trimmomatic
 input: 
-`demultiplex/sample1.1.fastq ... demultiplex/sample384.1.fastq, demultiplex/sample1.2.fastq ... demultiplex/sample384.2.fastq`
+`demultiplex/sample1.1.fastq ... demultiplex/sample384.1.fastq`
+`demultiplex/sample1.2.fastq ... demultiplex/sample384.2.fastq`
 
 output: 
-`trimmomatic/sample_id.1.paired, trimmomatic/sample_id.1.unpaired, trimmomatic/sample_id.2.paired, trimmomatic/sample_id.2.unpaired`
+`trimmomatic/sample_id.1.paired, trimmomatic/sample_id.1.unpaired`
+`trimmomatic/sample_id.2.paired, trimmomatic/sample_id.2.unpaired`
 
-The next step is to pipe the demultiplexed files into the trimmomatic tool.  
-> Trimmomatic is a fast, multithreaded command line tool that can be used to trim and crop
-Illumina (FASTQ) data as well as to remove adapters. 
+The next step is to pipe the demultiplexed files into the trimmomatic tool.  Trimmomatic is freely available and is a fast, multithreaded command line tool that can be used to trim and crop Illumina (FASTQ) data as well as to remove adapters. 
 
 parameters used in trimmomatic:
 
@@ -260,7 +261,8 @@ parameters used in trimmomatic:
 
 #### Alignment
 input:
-`trimmomatic/sample_id.1.paired, trimmomatic/sample_id.1.unpaired, trimmomatic/sample_id.2.paired, trimmomatic/sample_id.2.unpaired`
+`trimmomatic/sample_id.1.paired, trimmomatic/sample_id.1.unpaired`
+`trimmomatic/sample_id.2.paired, trimmomatic/sample_id.2.unpaired`
 
 output:
 `mapped_reads/sample1.bam ... mapped_reads/sample384.bam`
