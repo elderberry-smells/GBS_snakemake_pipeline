@@ -129,5 +129,4 @@ dmypy.json
 .pyre/
 
 # excel files and word files (protocol puposes only, not for the program)
-.xlsx
-.docx
+workflow/resources/oligos
