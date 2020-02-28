@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# excel files and word files (protocol puposes only, not for the program)
+.xlsx
+.docx
