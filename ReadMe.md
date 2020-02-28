@@ -224,7 +224,7 @@ This tool utilizes Snakemake to create a cradle-to-grave GBS analysis for paired
 
 The tool will commit the following steps in the pipeline, all of which are modular additions to the snakefile and can be swapped if needed with other tools.
 
-#### split
+### split
 input:  
 
 `fastq_R1.fastq.gz, fastq_R2.fastq.gz`
@@ -237,7 +237,7 @@ chunks/fastq_R2_aa.fq ... chunks/fastq_R2_zz.fq
 
 the program will count the lines in the sample_R1.fastq.gz file and divy that up into split files using `split` command (default 100M lines for split).  Currently can only accomplish split permuations from aa to zz.  Each file will come out of this stage into a newly created chunks/ folder.
 
-#### demultiplex
+### demultiplex
 input: 
 ```
 chunks/fastq_R1_aa.fq...chunks/fastq_R1_zz.fq, 
@@ -259,7 +259,7 @@ parameters for demultiplex script:
 
 `python3 PE_fastq_demultiplex.py -f fastq_R1.fastq.gz -b barcode_file.txt -s samplesheet.txt`
 
-#### trimmomatic
+### trimmomatic
 input: 
 ```
 demultiplex/sample1.1.fastq ... demultiplex/sample384.1.fastq,
@@ -281,7 +281,7 @@ trimmomatic PE -threads 16 -phred33 sample_id.1.fastq sample_id.2.fastq out.1.pa
 ILLUMINACLIP:{trim_file}:2:40:15 LEADING:15 TRAILING:15 SLIDINGWINDOW:4:15 MINLEN:55
 ```
 
-#### Alignment
+### Alignment
 input:
 ```
 trimmomatic/sample_id.1.paired, trimmomatic/sample_id.1.unpaired,
@@ -298,7 +298,7 @@ parameters used for bwa mem:
 
 `bwa mem -t 16 reference.fasta trim1.fq trim2.fq | samtools view -Shbu > sample.bam`
 
-#### Sorting
+### Sorting
 input:
 
 `mapped_reads/sample1.bam ... mapped_reads/sample384.bam`
@@ -315,7 +315,7 @@ parameters used for novosort:
 
 `novosort sample_id.bam --threads 16 --index --output sample_id.sorted.bam`
 
-#### Generating SNP calls and VCF file
+### Generating SNP calls and VCF file
 input:
 
 `sorted_reads/sample1.sorted.bam ... sorted_reads/sample384.sorted.bam`
