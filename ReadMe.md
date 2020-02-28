@@ -46,6 +46,9 @@ reference_file: "/absolute/path/to/reference.fasta
 ```shell script
 $ qsub workflow/resources/gbs.sh
 ```
+
+- Sit back and watch the data start rolling in.  
+
 ## Installation
 > download the repository using [git clone](#clone) or by clicking `clone or download` on the main page of the repository
 and dowloading the zip file.  
