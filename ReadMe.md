@@ -225,13 +225,11 @@ This tool utilizes Snakemake to create a cradle-to-grave GBS analysis for paired
 The tool will commit the following steps in the pipeline, all of which are modular additions to the snakefile and can be swapped if needed with other tools.
 
 #### split
-
 input:  
 
 `fastq_R1.fastq.gz, fastq_R2.fastq.gz`
 
 output: 
-
 ```
 chunks/fastq_R1_aa.fq ... chunks/fastq_R1_zz.fq, 
 chunks/fastq_R2_aa.fq ... chunks/fastq_R2_zz.fq
@@ -240,7 +238,6 @@ chunks/fastq_R2_aa.fq ... chunks/fastq_R2_zz.fq
 the program will count the lines in the sample_R1.fastq.gz file and divy that up into split files using `split` command (default 100M lines for split).  Currently can only accomplish split permuations from aa to zz.  Each file will come out of this stage into a newly created chunks/ folder.
 
 #### demultiplex
-
 input: 
 ```
 chunks/fastq_R1_aa.fq...chunks/fastq_R1_zz.fq, 
@@ -248,7 +245,6 @@ chunks/fastq_R2_aa.fq...chunks/fastq_R2_zz.fq
 ```
 
 output: 
-
 ```
 demultiplex/sample1.1.fastq ... demultiplex/sample384.1.fastq, 
 demultiplex/sample1.2.fastq ... demultiplex/sample384.2.fastq
@@ -259,10 +255,12 @@ In paired end reads, the Fastq read 1 houses the unique identifier barcodes for 
 
 This tool is the only custom processing script created.  It will demultiplex read 1 and read 2 into seperate files by matching the barcodes in the sequence and appending to the newly cerated sample files in chunks of 25 million sequences at a time (done through the usage of multiprocessing).  The [demux script](https://github.com/elderberry-smells/GBS_snakemake_pipeline/blob/master/workflow/scripts/PE_fastq_demultiplex.py) reads both read 1 and read 2 concurrently, so matching of header information in fastq is critical for the process.
 
+parameters for demultiplex script:
+
+`python3 PE_fastq_demultiplex.py -f fastq_R1.fastq.gz -b barcode_file.txt -s samplesheet.txt`
+
 #### trimmomatic
-
 input: 
-
 ```
 demultiplex/sample1.1.fastq ... demultiplex/sample384.1.fastq,
 demultiplex/sample1.2.fastq ... demultiplex/sample384.2.fastq
@@ -278,13 +276,13 @@ trimmomatic/sample_id.2.paired, trimmomatic/sample_id.2.unpaired
 The next step is to pipe the demultiplexed files into the trimmomatic tool.  Trimmomatic is freely available and is a fast, multithreaded command line tool that can be used to trim and crop Illumina (FASTQ) data as well as to remove adapters. 
 
 parameters used in trimmomatic:
-
-`ILLUMINACLIP:{trim_file}:2:40:15 LEADING:15 TRAILING:15 SLIDINGWINDOW:4:15 MINLEN:55`
+```
+trimmomatic PE -threads 16 -phred33 sample_id.1.fastq sample_id.2.fastq out.1.paired out.1.unpaired out.2.paired output.2.unpaired
+ILLUMINACLIP:{trim_file}:2:40:15 LEADING:15 TRAILING:15 SLIDINGWINDOW:4:15 MINLEN:55
+```
 
 #### Alignment
-
 input:
-
 ```
 trimmomatic/sample_id.1.paired, trimmomatic/sample_id.1.unpaired,
 trimmomatic/sample_id.2.paired, trimmomatic/sample_id.2.unpaired
@@ -301,13 +299,11 @@ parameters used for bwa mem:
 `bwa mem -t 16 reference.fasta trim1.fq trim2.fq | samtools view -Shbu > sample.bam`
 
 #### Sorting
-
 input:
 
 `mapped_reads/sample1.bam ... mapped_reads/sample384.bam`
 
 output:
-
 ```
 sorted_reads/sample1.sorted.bam ... sorted_reads/sample384.sorted.bam,
 sorted_reads/sample1.sorted.bam.bai ... sorted_reads/sample384.sorted.bam.bai
@@ -320,7 +316,6 @@ parameters used for novosort:
 `novosort sample_id.bam --threads 16 --index --output sample_id.sorted.bam`
 
 #### Generating SNP calls and VCF file
-
 input:
 
 `sorted_reads/sample1.sorted.bam ... sorted_reads/sample384.sorted.bam`
