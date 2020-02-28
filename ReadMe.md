@@ -18,6 +18,7 @@
 - [Team](#team)
 - [License](#license)
 
+
 ## Installation
 > download the repository using [git clone](#clone) or by clicking `clone or download` on the main page of the repository
 and dowloading the zip file.  
@@ -92,7 +93,7 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
 
 - input required:
 	- `sample_R1.fastq.gz` `sample_R2.fastq.gz` (no need to unzip)
-	- `samplesheet.txt` for format see samplesheet below
+	- `samplesheet.txt` for format [see samplesheet](#Samplesheet) below
 
 - update the config/config.yaml file.  Use absolute paths.
 ```shell script
@@ -141,6 +142,7 @@ calls are generated using samtools mpileup, and visualized in a VCF file using b
 
 The snakemake tool is structured in a way that you need only activate the environment and run the snakefile  after you update the `config/config.yaml` to direct the program.
 
+### Config file
 The config file is 4 lines, all required inputs for the snakefile to work properly
 
 ```
@@ -150,6 +152,7 @@ barcodefile:  "workflow/resources/barcodes/barcodes.txt"
 reference_file: "/absolute/path/to/reference.fasta
 ```
 
+### Samplesheet
 The sample sheet is a tab delimited txt file with 3 columns.  An example of a samplesheet is shown below:
 
 ```
