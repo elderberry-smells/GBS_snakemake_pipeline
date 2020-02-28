@@ -11,7 +11,7 @@
 ## Table of Contents
 
 - [Installation](#installation)
-- [Quick Use Guide](#quick-use)
+- [Quick Use Guide](#quick-use-guide)
 - [Features](#features)
 - [Usage](#usage)
 - [running the pipeline](#Executing)
