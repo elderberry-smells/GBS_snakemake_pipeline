@@ -2,9 +2,9 @@
 
 # Paired End GBS Pipeline
 
-> A bioinformatics tool to generate a vcf file from multiplexed GBS paired end fastq files
+> A bioinformatics tool to generate a vcf file from a multiplexed GBS paired end fastq files.  Process is based on our protocol (which is availble in the [resources folder](https://github.com/elderberry-smells/GBS_snakemake_pipeline/tree/master/workflow/resources/oligos).  However, due to the modularity of snakemake, you may only need to change a demultiplex script to include other protocols seamlessly (such as the [iGenomics Riptide GBS protocol](https://github.com/elderberry-smells/GBS_snakemake_pipeline/blob/master/workflow/scripts/riptide.py))
 
-> Utilizes snakemake to complete the process with one command line call
+> This tool utilizes [Snakemake](https://snakemake.readthedocs.io/en/stable/) to complete the process with just one command line call.   
 
 ![workflow](workflow/resources/images/pipeline_workflow_DAG.jpg?raw=true "Workflow")
 
@@ -37,9 +37,9 @@ barcodefile:  "workflow/resources/barcodes/barcodes_192.txt"
 reference_file: "/absolute/path/to/reference.fasta
 
 ```
-`cntrl-o to save [enter]`
+`cntrl-o` to save [enter]
 
-`cntrl-x to exit`
+`cntrl-x` to exit
 
 - run the pipeline by submitting the process to the gridengine queue
 
