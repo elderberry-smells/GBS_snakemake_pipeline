@@ -49,7 +49,9 @@ reference_file: "/absolute/path/to/reference.fasta
 $ qsub workflow/resources/gbs.sh
 ```
 
-- Sit back and watch the data start rolling in.  
+- this will give you a job number if submitted properly
+- you can check to make sure the program is running by typing `qstat -f`
+- runtime = 2-3 days for a standard output from Illumina HiSeq.   
 
 ## Installation
 > download the repository using [git clone](#clone) or by clicking `clone or download` on the main page of the repository
@@ -73,16 +75,14 @@ $ git clone https://github.com/elderberry-smells/GBS_snakemake_pipeline.git
     - `~/gbs/GBS_snakemake_pipeline/workflow/envs/`    
     - `~/gbs/GBS_snakemake_pipeline/workflow/rules/`
     - `~/gbs/GBS_snakemake_pipeline/workflow/scripts/`
+    - `~/gbs/GBS_snakemake_pipeline/workflow/resources/`
  
 #### Installing the GBS snakemake environment on your computer
-- ensure you are running the most recent version of conda (if you can)
-```shell script
-$ conda update conda
-``` 
 - Create an environment for snakemake using the `workflow/envs/gbs.yaml` file from the repo you downloaded
 ```shell script
 $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
 ```
+
 #### bioinformatics dependencies
 - all of these dependencies should be installed from the environment being created except for novosort
 
@@ -152,7 +152,6 @@ Sample_number	Index_name	Sample_ID
 10	gbsx010	Sample10
 ```
 
-
 The barcode file, as seen in the barcode folder `workflow/resources/barcodes/` are 2 columns, tab delimited txt files.  This file does not have any headers
 
 `col1: index_name` `col2: barcode`
@@ -215,14 +214,8 @@ $ nohup snakemake -j 16
 ``` 
 
 ###  Running the program on the cluster with qsub using shell script from `workflow/resources/gbs.sh`
-- from the head node, navigate to the folder with the snakefile.  Make sure your `config/config.yaml` is updated first!
-```shell script
-$ cd gbs/GBS_snakemake_pipeline/
-$ qsub workflow/resources/gbs.sh
-```
-- this will give you a job number if submitted properly
-- you can check to make sure the program is running by typing `qstat -f`
-- runtime = 5ish days.  Working on a faster demux with threading to cut a day off.  
+- go back to the [quick use guide](#quick-use-guide) for instructions on running on cluster
+
 
 ## Features
 
