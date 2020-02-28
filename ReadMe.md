@@ -2,24 +2,26 @@
 
 # Paired End GBS Pipeline
 
-> A bioinformatics tool to generate a vcf file from a multiplexed GBS paired end fastq files.  Process is based on our protocol (which is availble in the [resources folder](https://github.com/elderberry-smells/GBS_snakemake_pipeline/tree/master/workflow/resources/oligos).  However, due to the modularity of snakemake, you may only need to change a demultiplex script to include other protocols seamlessly (such as the [iGenomics Riptide GBS protocol](https://github.com/elderberry-smells/GBS_snakemake_pipeline/blob/master/workflow/scripts/riptide.py))
+> A bioinformatics tool to generate a vcf file from a multiplexed GBS paired end fastq files.  This process is based on our protocol (which is also availble in the [resources folder](https://github.com/elderberry-smells/GBS_snakemake_pipeline/tree/master/workflow/resources/oligos).  H
 
-> This tool utilizes [Snakemake](https://snakemake.readthedocs.io/en/stable/) to complete the process with just one command line call.   
+> However, due to the modularity of this protocol, you may only need to change out the demultiplex script to include other protocols seamlessly (such as the [iGenomics Riptide GBS protocol](https://github.com/elderberry-smells/GBS_snakemake_pipeline/blob/master/workflow/scripts/riptide.py))
+
+> This tool utilizes the workflow management system [Snakemake](https://snakemake.readthedocs.io/en/stable/).  This tool allows you to accomplish a complete pipeline process with just one command line call. 
 
 ![workflow](workflow/resources/images/pipeline_workflow_DAG.jpg?raw=true "Workflow")
 
 ## Table of Contents
 - [Quick Use Guide](#quick-use-guide)
 - [Installation](#installation)
-- [Features](#features)
 - [Usage](#usage)
 - [running the pipeline](#Executing)
+- [Features](#features)
 - [Team](#team)
 - [License](#license)
 
 ## Quick Use Guide
 > This is assuming you have followed the installation.  If not, proceed first to [installations](#installation).
-> Once your environment is set up, and the pathways reflect your user name, you can start running the pipeline.
+> Once your environment is set up, and the pathways reflect your user name, you can start running the pipeline!
 
 - input required:
 	- `sample_R1.fastq.gz`
@@ -56,7 +58,7 @@ and dowloading the zip file.
 ```shell script
 $ mkdir ~/gbs & cd ~/gbs/
 ```
-### clone 
+#### Cloning the repository to your home directory in cluster 
 > you will need git installed on your computer to accomplish this.  Can be done using `conda install -c anaconda git` on your cluster account.
 - Use the `git clone` process to make an exact copy of the current repository
 - clone this repository to your local machine using the following:
@@ -72,7 +74,7 @@ $ git clone https://github.com/elderberry-smells/GBS_snakemake_pipeline.git
     - `~/gbs/GBS_snakemake_pipeline/workflow/rules/`
     - `~/gbs/GBS_snakemake_pipeline/workflow/scripts/`
  
-### installing the GBS snakemake environment on your computer
+#### Installing the GBS snakemake environment on your computer
 - ensure you are running the most recent version of conda (if you can)
 ```shell script
 $ conda update conda
@@ -106,9 +108,11 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
     
     `export PATH="$PATH:~/miniconda3/envs/gbs/bin/novocraft"` 
 
-### Some minor changes to the snakefile and rule files to include your user name
+#### Some minor changes to the snakefile and rule files to include your user name
 - You will have to edit the file to reflect your username in the scripts before it will run.  You can do this with whichever editor you would like, `nano` would be fine for these small edits.  
+- unfortunately using a ~ in snakefiles to direct scripts to your home dir doesn't work
 - replace /home/AAFC-AAC/`your_user_name`/gbs... with your actual username
+
 ##### Snakefile
 -  line 30
 -  line 52 - 56 
@@ -116,36 +120,6 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
 - line 10
 ##### workflow/rules/trimmomatic.smk
 - line 5
-
-
-## Features
-
-This tool utilizes Snakemake to create a cradle-to-grave GBS analysis for paired end reads from Illumina sequencing platforms (2x150).
-
-The tool will commit the following steps in the pipeline, all of which are modular additions to the snakefile and can be swapped if needed with other tools.
-
-#### demultiplex
-In paired end reads, the Fastq read 1 houses the unique identifier barcodes for demultiplexing.  The barcodes in this tool are designed based on the 
-[Poland et. al 2012 GBS protocol](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0032253), and the barcodes being used (up to 384 unique barcodes for multiplexing) can be found in `workflow/resources/barcodes_384.txt`
-
-the barcodes themselves are anywhere between 5 and 14 bp in length, and end in `TCGA` signalling the start to the 
-actual sample sequence.  This tool will demultiplex read 1 and read 2 into seperate files `sample_id.1.fq` and `sample_id.2.fq`
-
-#### trimmomatic
-The next step is to pipe the demultiplexed files into the trimmomatic tool.  
-> Trimmomatic is a fast, multithreaded command line tool that can be used to trim and crop
-Illumina (FASTQ) data as well as to remove adapters. These adapters can pose a real problem
-depending on the library preparation and downstream application.
-
-outputs of this file will be `sample_id.1.paired` `sample_id.1.unpaired` `sample_id.2.paired` `sample_id.2.unpaired`
-
-#### Alignment and Sorting
-
-trim files are passed through bwa mem for alignment to the reference genome, and then sorted and indexed using novosort
-
-#### Generating SNP calls and VCF
-
-calls are generated using samtools mpileup, and visualized in a VCF file using bcftools 
 
 ## Usage
 
@@ -249,7 +223,36 @@ $ qsub workflow/resources/gbs.sh
 - this will give you a job number if submitted properly
 - you can check to make sure the program is running by typing `qstat -f`
 - runtime = 5ish days.  Working on a faster demux with threading to cut a day off.  
-  
+
+## Features
+
+This tool utilizes Snakemake to create a cradle-to-grave GBS analysis for paired end reads from Illumina sequencing platforms (2x150).
+
+The tool will commit the following steps in the pipeline, all of which are modular additions to the snakefile and can be swapped if needed with other tools.
+
+#### demultiplex
+In paired end reads, the Fastq read 1 houses the unique identifier barcodes for demultiplexing.  The barcodes in this tool are designed based on the 
+[Poland et. al 2012 GBS protocol](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0032253), and the barcodes being used (up to 384 unique barcodes for multiplexing) can be found in `workflow/resources/barcodes_384.txt`
+
+the barcodes themselves are anywhere between 5 and 14 bp in length, and end in `TCGA` signalling the start to the 
+actual sample sequence.  This tool will demultiplex read 1 and read 2 into seperate files `sample_id.1.fq` and `sample_id.2.fq`
+
+#### trimmomatic
+The next step is to pipe the demultiplexed files into the trimmomatic tool.  
+> Trimmomatic is a fast, multithreaded command line tool that can be used to trim and crop
+Illumina (FASTQ) data as well as to remove adapters. These adapters can pose a real problem
+depending on the library preparation and downstream application.
+
+outputs of this file will be `sample_id.1.paired` `sample_id.1.unpaired` `sample_id.2.paired` `sample_id.2.unpaired`
+
+#### Alignment and Sorting
+
+trim files are passed through bwa mem for alignment to the reference genome, and then sorted and indexed using novosort
+
+#### Generating SNP calls and VCF
+
+calls are generated using samtools mpileup, and visualized in a VCF file using bcftools 
+
 ## Team
 - Author:  Brian James (brian.james4@canada.ca)
 - Testing and Improvements:  Jana Ebersbach
