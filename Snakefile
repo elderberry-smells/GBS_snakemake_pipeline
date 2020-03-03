@@ -61,6 +61,8 @@ ref_genome = config["reference_file"]
 
 # get the pathway from the read1 fastq file, this is where we want to run the pipeline (set working dir)
 path_name, base_name = os.path.split(read1)
+file_handle = os.path.splitext(base_name)[0]
+file_name = os.path.splitext(file_handle)[0]
 
 # read the sample sheet and parse the data you need out of it into variables
 index, samples= parse_samplesheet(samplesheet)
