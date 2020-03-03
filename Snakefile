@@ -62,7 +62,7 @@ read1 = config["sample_read1"]
 # if the read number is in lowercase, make it uppercase
 if '_r1' in read1:
     read1 = read1.replace('_r1', '_R1')
-read2 = read1.replace('_R1', '_R2')
+read2 = read1.replace('_R1', '_R2')  # make the read2 name (only difference is R1 vs R2)
 
 samplesheet = config["samplesheet"]
 barcode_file = config["barcodefile"]
@@ -72,8 +72,6 @@ ref_genome = config["reference_file"]
 path_name, base_name = os.path.split(read1)
 file_handle = os.path.splitext(base_name)[0]
 file_name = os.path.splitext(file_handle)[0]
-
-
 
 # read the sample sheet and parse the data you need out of it into variables
 index, samples= parse_samplesheet(samplesheet)
