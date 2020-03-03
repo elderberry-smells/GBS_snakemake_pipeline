@@ -45,7 +45,7 @@ def generate_split_list(fastq_r1, fname, split_lines):
             
     # read the fastq_r1 file and determine how many lines there are
     wc_command = f'zcat {fastq_r1} | wc -l'
-    line_count = float(subprocess.get_output(wc_command))
+    line_count = float(subprocess.getoutput(wc_command))
     name_list = total_names[:int(split_files)]  # slice only the names for the number of split files to be generated
     name_list2 = [split_fname.replace('_R1', '_R2') for split_fname in name_list]
     
