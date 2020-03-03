@@ -59,10 +59,11 @@ def generate_split_list(fastq_r1, fname, split_lines):
 configfile: "/home/AAFC-AAC/your_user_name/gbs/GBS_snakemake_pipeline/config/config.yaml"
 read1 = config["sample_read1"]
 
-# if the read number is in lowercase, make it uppercase
+# if the read number is in lowercase, make sure you keep that format going forward (same for uppercase)
 if '_r1' in read1:
-    read1 = read1.replace('_r1', '_R1')
-read2 = read1.replace('_R1', '_R2')  # make the read2 name (only difference is R1 vs R2)
+    read2 = read1.replace('_r1', '_r2')
+else:
+    read2 = read1.replace('_R1', '_R2')  # make the read2 name (only difference is R1 vs R2)
 
 samplesheet = config["samplesheet"]
 barcode_file = config["barcodefile"]
