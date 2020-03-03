@@ -1,7 +1,13 @@
 split_R1, split_R2 = generate_split_list(read1, file_name, split_number)  # get a list of split output
 chunk_prefix1 = f"chunks/{file_name}_"
-chunk_prefix2 = chunk_prefix1.replace('_R1', '_R2')
 
+# formatting for if read number is lowercase or uppercase
+if '_r1' in chunk_prefix1:
+    chunk_prefix2 = chunk_prefix1.replace('_r1', '_r2')
+else:
+    chunk_prefix2 = chunk_prefix1.replace('_R1', '_R2')
+
+    
 rule split:
     input:
         r1 = read1,
