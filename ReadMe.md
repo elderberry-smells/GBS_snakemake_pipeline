@@ -87,6 +87,7 @@ $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
 - all of these dependencies should be installed from the environment being created except for novosort
 
 `python=3.6`
+`snakemake=4.0.0`
 `trimmomatic=0.39`
 `bwa=0.7.17`
 `samtools=1.9`
