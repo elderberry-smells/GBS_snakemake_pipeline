@@ -57,7 +57,7 @@ dependencies:
   - libxml2=2.9.10=hee79883_0
   - lz4-c=1.8.3=he1b5a44_1001
   - multidict=4.7.4=py36h516909a_0
-  - multiqc=1.8=py36h516909a_0
+  - multiqc=1.8=py_2
   - ncurses=6.1=hf484d3e_1002
   - numpy=1.18.1=py36h95a1406_0
   - openjdk=11.0.1=h600c080_1018
