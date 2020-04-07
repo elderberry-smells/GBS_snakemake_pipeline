@@ -21,6 +21,7 @@ dependencies:
   - docutils=0.16=py36_0
   - dropbox=5.2.1=py36_0
   - ecdsa=0.13=py_0
+  - fastqc=0.11.9=0_conda_forge
   - filechunkio=1.6=py36_0
   - fontconfig=2.13.1=h86ecdb6_1001
   - freetype=2.10.0=he983fc9_1
@@ -56,6 +57,7 @@ dependencies:
   - libxml2=2.9.10=hee79883_0
   - lz4-c=1.8.3=he1b5a44_1001
   - multidict=4.7.4=py36h516909a_0
+  - multiqc=1.8=py36h516909a_0
   - ncurses=6.1=hf484d3e_1002
   - numpy=1.18.1=py36h95a1406_0
   - openjdk=11.0.1=h600c080_1018
@@ -106,4 +108,3 @@ dependencies:
   - zlib=1.2.11=h516909a_1006
   - zstd=1.4.4=h3b9ef0a_1
 prefix: ~/miniconda3/envs/gbs
-
