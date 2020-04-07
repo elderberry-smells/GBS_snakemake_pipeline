@@ -1,4 +1,4 @@
-sample_read1: "/absolute/path/to/sample/sample_R1.fastq"
-samplesheet: "/absolute/path/to/sample/sample_samplesheet.txt"
-barcodefile:  "/home/your_user_name/gbs/GBS_snakemake_pipeline/workflow/resources/barcodes/barcodes_192.txt"
-reference_file: "/absolute/path/to/reference.fasta"
+sample_read1: "/absolute/path/to/Sample_R1.fastq.gz"
+samplesheet: "/absolute/path/to/samplesheet.csv"
+barcodefile:  "/absolute/path/to/barcodes/workflow/resources/barcodes/barcodes_192.txt"
+

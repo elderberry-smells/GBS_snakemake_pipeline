@@ -1,0 +1,13 @@
+# The absolute path to each directory that houses the .bam files for analysis.
+sample_directories:
+  - "/absolute/path/to/some/sorted_bams"
+  - "/absolute/path/to/some/more/sorted_bams"
+  - "/absolute/path/to/even/more/sorted_bams"
+
+
+# assign the directory you would like for the final VCF file.  Will be created if not exists (careful of permissions).
+outfile: "/absolute/path/to/output/vcf/directory"
+
+
+# Absolute path to the reference you would like every BAM file above to generate SNP calls from.
+reference: "/absolute/path/to/reference_genome.fasta"
