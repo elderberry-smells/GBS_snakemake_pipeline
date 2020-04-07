@@ -1,4 +1,0 @@
-channels:
-  - novosort
-dependencies:
-  - trimmomatic =0.39
