@@ -1,0 +1,51 @@
+from pathlib import Path
+
+#### Functions ####
+def listed_bams(bam_path):
+    """
+    move through the list of supplied bam directories and create a final output list of path/sample.bam
+    :param bam_path: from config file - config['samples']
+    :return: a list or maybe create a new configfile?
+    """
+    with open('bams.list', 'a') as bam_out:
+        for bamdir in bam_path:
+            # list all .bam files in directories from config file, append to final list of samples
+            path_bams = Path(bamdir).glob('*.bam')
+            for i in path_bams:
+                bamline = f'{str(i)}\n'
+                bam_out.write(bamline)
+
+
+#### Inputs and Rules ####
+configfile: f'{home_dir}/gbs/GBS_snakemake_pipeline/config/config_vcf.yaml'
+
+# take the outdir input from the configfile.yaml and make that the working directory if not exists
+out_path = config['outfile']
+Path(out_path).mkdir(parents=True, exist_ok=True)
+p_dir = Path(out_path).parts[-1]  # the final folder in the outfile entry for snp file naming
+reference = config['reference']
+
+workdir: out_path
+
+# generate the bams.list file for this run into the working directory
+listed_bams(config['sample_directories'])
+
+
+rule all:
+    input:
+        f'calls/{p_dir}.vcf.gz'
+
+
+rule bcf_variantcall:
+    input:
+        bammies = 'bams.list',
+        ref = reference
+    output:
+        snps = f'calls/{p_dir}.vcf.gz'
+    shell:
+         "bcftools mpileup -a AD,DP -f {input.ref} -b {input.bammies} | bcftools call -mv -Oz > {output.snps}"
+
+'''
+add in filtering of VCF
+add in genomic diversity analysis we could commonly use?  like a PCA or something.
+'''
