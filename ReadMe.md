@@ -24,7 +24,7 @@
 ## Table of Contents
 - [Quick Use Guide](#quick-use-guide)
 - [Installation](#installation)
-- [Usage](#Usage-More-detailed-guide-to-running-the-program)
+- [Usage](#Usage)
 - [Running the pipeline](#Executing)
 - [Features](#features)
 - [Team](#team)
@@ -164,7 +164,8 @@ when that is done running, you should see `(gbs)` on the left side of your comma
     export PATH="$PATH:~/miniconda3/envs/gbs/bin/novocraft"
     ``` 
 
-## Usage  - More detailed guide to running the program
+## Usage  
+A more detailed guide to running the program
 
 ### BAM Generation
 
