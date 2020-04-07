@@ -6,7 +6,7 @@
   
 > This tool utilizes the workflow management system [Snakemake](https://snakemake.readthedocs.io/en/stable/) and allows you to accomplish a complete pipeline process with just a few command line calls, even on a computing cluster.
 
-> An Example Workflow:
+An Example Workflow:
 
 ![workflow](workflow/resources/images/BAM_workflow.jpg?raw=true "Workflow")
 
