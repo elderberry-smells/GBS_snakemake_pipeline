@@ -107,7 +107,7 @@ def generate_split_list(fastq_r1, fname, split_lines):
 home_dir = str(Path.home())
 
 # read in the config file to get pathways/samples into variables
-configfile: f"{home_dir}/gbs2/config/config.yaml"
+configfile: f"{home_dir}/gbs/GBS_snakemake_pipeline/config/config.yaml"
 
 read1 = config["sample_read1"]
 read2 = read1.replace('_R1', '_R2')  # make the read2 name (only difference is R1 vs R2)
