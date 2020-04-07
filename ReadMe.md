@@ -36,7 +36,7 @@
 > Once your environment is set up you can start running the pipeline!
 >Start at the beginning with Generating BAMs, or if you have BAMs you want to process, move on to generating VCFs!
 
-###### 1. Generating BAMs
+#### 1. Generating BAMs
 Take paired end Fastq files (R1 and R2) and produce sorted BAM files and BAM index files
 - input required:
 	- `sample_R1.fastq.gz`
@@ -69,7 +69,7 @@ $ qsub ~/gbs/GBS_snakemake_pipeline/workflow/resources/gbs.sh
 - runtime ~ 1 to 2 days for a standard output from Illumina HiSeq.  
 - output of the tool will be in the directory where your fastq files were located. 
 
-###### 2. Generating VCF
+#### 2. Generating VCF
 Take a list of BAM directories, and produce a single VCF file from all the BAM files included in those directories.
 - input required:
     - directories of bam files (multiple directories allowed)
