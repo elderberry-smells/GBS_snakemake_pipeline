@@ -1,10 +1,10 @@
 rule novosort:
     input:
-        bam = "mapped_reads/{sample}.bam"
+        bam = "{ref_dir}/mapped_reads/{sample}.bam"
     output:
-        sort_bam = "sorted_reads/{sample}.sorted.bam",
-        index_bam = "sorted_reads/{sample}.sorted.bam.bai"
-    log:  "log/novosort.log"
-    threads: 4
+        sort_bam = "{ref_dir}/sorted_bams/{sample}.bam",
+        index_bam = "{ref_dir}/sorted_bams/{sample}.bam.bai"
+    log:  "{ref_dir}/log/novosort.log"
+    threads: 16
     shell:
-        "novosort {input.bam} --threads {threads} --index --output {output.sort_bam} 2>> {log}"
+        "(novosort {input.bam} --threads {threads} --markDuplicates --index --output {output.sort_bam}) 2>> {log}"
