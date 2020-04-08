@@ -207,6 +207,8 @@ Examples for samplesheets can be found in `workflow/resources/example_sampleshee
 #### Features
 Brief documentation on each step in this pipeline can be found in the [Features ReadMe](workflow/resources/ReadMes/Features.md)
 
+The protocol for library construction is also included in the [resources folder](workflow/resources/oligos)
+
 # Team
 - Author:  Brian James (brian.james4@canada.ca)
 - Testing and Improvements:  Dr. Jana Ebersbach (jana.ebersbach@canada.ca)
