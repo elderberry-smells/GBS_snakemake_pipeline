@@ -153,10 +153,11 @@ Take a list of BAM directories, and produce a single VCF file from all the BAM f
     export PATH="$PATH:~/miniconda3/envs/gbs/bin/novocraft"
     ``` 
     `cntrl-o` to save (press enter)
+    
     `cntrl-x` to exit
      
 #### bioinformatics dependencies
-- all of these dependencies should be installed from the environment being created except for novosort
+all of these dependencies should be now be installed and callable by typing in their names in terminal
 
 `python=3.6`
 `snakemake=4.0`
@@ -169,7 +170,7 @@ Take a list of BAM directories, and produce a single VCF file from all the BAM f
 ### Testing to see if the pipeline is working
 > If you have data and a samplesheet to run, test to see if the snakemake process is working
 
-Update the `config/config.yaml` file to direct the pipeline to the resources it needs.
+Update the `config.yaml` file to direct the pipeline to the resources it needs.
 ```
 $ nano ~/gbs/GBS_snakemake_pipeline/config/config.yaml
 ```
