@@ -6,6 +6,7 @@
 - [Trim rule](#trimmomatic)
 - [align rule](#alignment)
 - [sort rule](#sorting)
+- [Quality Control](#quality-control)
 - [vcf generation](#generating-snp-calls-and-vcf-file)
 
 ### split
@@ -99,7 +100,40 @@ parameters used for novosort:
 
 `novosort sample_id.bam --threads 16 --index --output sample_id.sorted.bam`
 
-### Generating SNP calls and VCF file
+### Quality Control
+
+#### fastqc
+
+input:
+
+`ref_dir/demultiplex/*.fastq`
+
+output:
+`ref_dir/log/fastqc/fastqc_report.html`
+
+Run fastqc stats on all demultiplexed fastq files for each directory created in the pipeline
+
+parameters:
+
+`fastqc -o ref_dir/log/fastqc/ -t 16 ref_dir/demultiplex/*.fastq`
+
+#### MultiQC
+
+input:
+
+`ref_dir/log/`
+
+output:
+
+`ref_dir/log/multiqc_report.html`
+
+Scan through the log files from entire pipeline for each directory created and produce a summarized report for all samples.
+
+parameters:
+
+`multiqc ref_dir/log -o ref_dir/log/`
+
+## Generating SNP calls and VCF file
 The second part of the tool is the Snakefile-vcf script that creates a VCF file from a list of bam directories.
 
 input:
