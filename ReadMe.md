@@ -213,7 +213,7 @@ The protocol for library construction is also included in the [resources folder]
 # Team
 - Author:  Brian James (brian.james4@canada.ca)
 - Testing and Improvements:  Dr. Jana Ebersbach (jana.ebersbach@canada.ca)
-- AAFC Scientist: Dr. Isobel Parkin (isobel.parkin@canada.ca)
+- Lead Scientist: Dr. Isobel Parkin (isobel.parkin@canada.ca)
 
 
 ## License
