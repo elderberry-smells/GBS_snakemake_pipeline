@@ -16,6 +16,7 @@ An Example Workflow:
 - Split multiplexed libraries into separate fastq's for each sample (read 1 and read 2) for in-line barcoded libraries.
 - Process GBS libraries that are made of different species, or samples that require different reference genomes.
 - End to end processing with only 2 command line calls to GridEngine. One for producing BAMs, one for producing VCF's
+- Quality control - statictics produced for each sample and summarized in a MultiQC report 
 - Designed to run on high performance clusters
 - Custom iGenomics Riptide GBS library processing
 - Ease of use - you need to only provide the tool with paths to a sample sheet, barcode file and a reference genome
