@@ -102,13 +102,14 @@ parameters used for novosort:
 
 ### Quality Control
 
-#### fastqc
+#### FastQC
 
 input:
 
 `ref_dir/demultiplex/*.fastq`
 
 output:
+
 `ref_dir/log/fastqc/fastqc_report.html`
 
 Run fastqc stats on all demultiplexed fastq files for each directory created in the pipeline
