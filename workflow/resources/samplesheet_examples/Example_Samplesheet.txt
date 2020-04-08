@@ -1,0 +1,12 @@
+Sample_number	Index_name	Sample_ID	Reference_file
+1	gbsx001	Sample1	/absolute/path/to/reference1/reference1.fasta
+2	gbsx002	Sample2	/absolute/path/to/reference1/reference1.fasta
+3	gbsx003	Sample3	/absolute/path/to/reference1/reference1.fasta
+4	gbsx004	Sample4	/absolute/path/to/reference1/reference1.fasta
+5	gbsx005	Sample5	/absolute/path/to/reference1/reference1.fasta
+6	gbsx006	Sample6	/absolute/path/to/reference2/reference2.fasta
+7	gbsx007	Sample7	/absolute/path/to/reference2/reference2.fasta
+8	gbsx008	Sample8	/absolute/path/to/reference2/reference2.fasta
+9	gbsx009	Sample9	/absolute/path/to/reference2/reference2.fasta
+10	gbsx010	Sample10	/absolute/path/to/reference2/reference2.fasta	
+
