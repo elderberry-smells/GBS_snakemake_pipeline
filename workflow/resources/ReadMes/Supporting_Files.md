@@ -65,6 +65,9 @@ Sample_number	Index_name	Sample_ID   Reference_path
 9	gbsx009	Sample9     /absolute/path/to/reference2/reference_genome2.fasta
 10	gbsx010	Sample10    /absolute/path/to/reference2/reference_genome2.fasta
 ```
+
+example samplesheets (a csv and a txt version) can be found in the resources directory. 
+
 ## Barcode file
 The barcode file is a tab delimited txt file, matching the index name to its corresponding barcode sequence.
 
