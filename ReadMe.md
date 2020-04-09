@@ -138,7 +138,7 @@ Take a list of BAM directories, and produce a single VCF file from all the BAM f
     ```
 - When that is done running, you should see `(gbs)` on the left side of your command line
 
-4. Move the novosort folder to your newly created gbs environment bin
+4. Move the novosort folder to your newly created gbs environment binhttps://www.biostars.org/p/162575/
     
     ```shell script
     $ mv GBS_snakemake_pipeline/workflow/resources/novocraft/ ~/miniconda3/envs/gbs/bin/
@@ -178,7 +178,7 @@ $ nano ~/gbs/GBS_snakemake_pipeline/config/config.yaml
 
 Invoke the snakemake process in test mode to see if outputs are being called correctly.
 ```shell script
-$ snakemake -np
+$ snakemake -s ~/gbs/GBS_snakemake_pipeline/Snakefile -np
 ```
 the snakemake process should show you all it intends to do with the samples located in the samplesheet, and how many process for each module/rule will run.  
 
