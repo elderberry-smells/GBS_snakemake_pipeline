@@ -60,7 +60,7 @@ Take paired end Fastq files (R1 and R2) and produce sorted BAM files and BAM ind
 4. Run the pipeline by submitting the process via shell script to the GridEngine queue in the terminal.
 
     ```shell script
-    $ qsub ~/gbs/GBS_snakemake_pipeline/workflow/resources/gbs.sh
+    $ qsub ~/gbs/GBS_snakemake_pipeline/workflow/gbs.sh
     ```
 5.  Done!   
 
@@ -97,7 +97,7 @@ Take a list of BAM directories, and produce a single VCF file from all the BAM f
 2. Run the pipeline by submitting the process via shell script to the GridEngine queue in the terminal.
 
     ```shell script
-    $ qsub ~/gbs/GBS_snakemake_pipeline/workflow/resources/vcf.sh
+    $ qsub ~/gbs/GBS_snakemake_pipeline/workflow/vcf.sh
     ```
 
 3. Done!
