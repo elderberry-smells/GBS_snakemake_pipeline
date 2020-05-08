@@ -3,11 +3,9 @@
 This script is used to demultiplex paired end fastq format GBS files into the seperate GBS index
 files based on the in-line barcodes annealed to the DNA fragments in Read1 files only
 
-(The GBS data produced is accomplished by following Poland et. al 2012 GBS protocol, and sequenced on Illumina platform)
-
 To run this script individually and not part of a pipeline use the following example command:
 
-$ python3 scripts/PE_fastq_demultiplex.py -f path/to/read_1.fastq -s path/to/samplesheet.txt -b path/to/barcode_file.txt
+$ python3 PE_fastq_demultiplex_AAFC.py -f read_1.fastq -s samplesheet.csv -b barcode_file.txt
 
 Author:  Brian James
 email:  brian.james4@canada.ca
@@ -17,6 +15,7 @@ import re
 import argparse
 import os
 from datetime import datetime
+from random import randint
 import concurrent.futures
 import multiprocessing
 from multiprocessing import Lock
@@ -92,7 +91,7 @@ def fq_write_lock(fq_writelock, read1, read2):
     """
     Lock the files you are writing to to avoid any Non-ThreadSafe writing to the file when you have a lot of processes
     accessing the same fiel to append to.
-    :param lock: multiprocessing lock
+    :param fq_writelock: multiprocessing lock
     :param read1: sample dict containing the write data for parsed read 1 data
     :param read2: sample dict containing the write data for parsed read 2 data
     :return: no return, just write to the files.
@@ -130,13 +129,13 @@ def parse_index(seq_record, bcode_dict):
     if bcode:
         numbers = bcode.span()  # get the start and finish locations of TGCA
 
-        # some barcodes have 2 TGCA in sequence, need a specific number of bases before TGCA to be proper depending on bcode_file.
+        # some barcodes have 2 TGCA in sequence, need a specific number of bases before TGCA to be proper
         if longest == 14:   # using the newer set of barcodes.  Need a minimum of 5 bases before TGCA to properly match!
             pre_tgca = 5
         else:               # using the older set of barcodes.  Need a minimum of 4 bases before TGCA to properly match!
             pre_tgca = 4
             
-        if numbers[0] < pre_tgca:  # not the proper amount of bases before TGCA found.  Check if another TGCA in sequence.
+        if numbers[0] < pre_tgca:  # not the proper amount of bases before TGCA found. Check if another TGCA in sequence
             bcode = re.search('TGCA', sequence[numbers[1]:])
             if bcode:
                 new_span = bcode.span()
@@ -144,7 +143,7 @@ def parse_index(seq_record, bcode_dict):
             else:
                 return 'unmatched', 0
 
-        if numbers[1] in range(shortest, longest+1):  # make sure the result is the proper length of the barcodes provided
+        if numbers[1] in range(shortest, longest+1):  # make sure the barcode result is the proper length
 
             index = sequence[0:numbers[1]]  # grab just the index + TGCA from sequence
             cut_index = numbers[0]
@@ -182,6 +181,36 @@ def parse_index(seq_record, bcode_dict):
         return 'unmatched', 0
 
 
+def parse_riptide(seq_record, bcode_dict):
+    """
+    :param seq_record: the record is the sequence entry (4 lines) from fastq file
+    :param bcode_dict:  dictionary of the information on the barcode/index name (index001: bcode, index2: bcode, ...)
+    :return: returns the filename/index name from matching up index with barcode file
+    """
+
+    sequence = str(seq_record['sequence'])
+    bcode = sequence[:8]
+
+    return_name = []
+
+    if bcode.startswith('N'):
+        gbs_index = dict(filter(lambda item: bcode[1:] in item[1][0], bcode_dict.items()))
+
+        # only keep the matches that are the same length as the index (if multiple hits, reduce to 1)
+        for key, val in gbs_index.items():
+            return_name.append(key)
+    else:
+        gbs_index = dict(filter(lambda item: bcode in item[1][0], bcode_dict.items()))
+
+        for key, val in gbs_index.items():
+            return_name.append(key)
+
+    if len(return_name) == 0:
+        return 'unmatched'
+    else:
+        return return_name[0]
+
+
 def split_fq(fastq):
 
     fastq2 = fastq.replace('_R1', '_R2')  # get read 2
@@ -189,6 +218,8 @@ def split_fq(fastq):
     # make the barcode and sample dictionaries
     barcodes, samples = make_dicts(barcode_file, sample_sheet)
     _, samples2 = make_dicts(barcode_file, sample_sheet)
+    rand_x = int(randint(1, 1000))  # random x_coord to start on, so each multiprocess doesn't make same numbers
+    rand_y = int(randint(1, 1000))  # random y_coord to start on, so each multiprocess doesn't make same numbers
 
     with open(fastq) as f1, open(fastq2) as f2:
 
@@ -206,22 +237,46 @@ def split_fq(fastq):
                 record2 = process_fq(lines2)
 
                 # pass the records through the parse_fq function to get the index name for read 1
-                index_name, slicer = parse_index(record, barcodes)
-                barcodes[index_name][1] += 1
+                if 'riptide' in barcode_file:
+                    index_name = parse_riptide(record, barcodes)
+                    barcodes[index_name][1] += 1
 
-                # read 1 sliced data
-                sequence = str(record['sequence'][slicer:])  # cut off the index, leaving just TCGA at start
-                quality = str(record['quality'][slicer:])  # cut off the same amount of quality scores
+                    # read 1 sliced data
+                    sequence = str(record['sequence'][21:])  # cut off the index + 12 random nucleotide (leaving 130 nt)
+                    quality = str(record['quality'][21:])  # cut off the same amount of quality scores
 
-                # read 2 sliced data
-                sequence2 = str(record2['sequence'])  # no index on read2 so no need to slice sequence like read1
-                quality2 = str(record2['quality'])
+                    # read 2 sliced data
+                    sequence2 = str(record2['sequence'][:142])  # cut off the 8 random nucleotide sequence at end
+                    quality2 = str(record2['quality'][:142])  # cut off the same amount of quality scores
+
+                else:  # is the in-house AAFC barcodes.
+                    index_name, slicer = parse_index(record, barcodes)
+                    barcodes[index_name][1] += 1
+
+                    # read 1 sliced data
+                    sequence = str(record['sequence'][slicer:])  # cut off the index, leaving just TCGA at start
+                    quality = str(record['quality'][slicer:])  # cut off the same amount of quality scores
+
+                    # read 2 sliced data
+                    sequence2 = str(record2['sequence'])  # no index on read2 so no need to slice sequence like read1
+                    quality2 = str(record2['quality'])
 
                 # double check that the run_ids match between read1 and read 2
                 run_id = record['name'].split(' ')[0]
                 run_id2 = record2['name'].split(' ')[0]
 
                 if run_id == run_id2:
+
+                    if run_id[-3:] == '0:0':  # In house data had an issue where coordinates were 0:0 for all lines.
+                        x_coord = str(rand_x)
+                        y_coord = str(rand_y)
+
+                        # apply the random incremental integers to the coordinates instead of 0:0
+                        record['name'] = record['name'].replace(':0:0   ', f':{x_coord}:{y_coord}   ')
+
+                        rand_x = rand_x + 1  # increment so next coordinate isn't the same.
+                        rand_y = rand_y + 1  # increment so next coordinate isn't the same.
+
                     # add the record information to the samples dictionary as a string
                     fastq1 = f"{record['name']}\n{sequence}\n+\n{quality}\n"
                     fastq2 = f"{record2['name']}\n{sequence2}\n+\n{quality2}\n"
@@ -236,6 +291,7 @@ def split_fq(fastq):
                         samples['unmatched'][2].append(fastq1)
                         samples2['unmatched'][2].append(fastq2)
 
+                    # reset your lines for next sequence record in fastq
                     lines1 = []
                     lines2 = []
 
@@ -255,6 +311,7 @@ def write_outstats(st_time, fq_path, bcode_file, bcode_dict, sample_dict):
     :param fq_path:  The -f argument call, which includes the path in which to create and save the log
     :param bcode_file:  the -b argument call.  Add to the header info on what was run
     :param bcode_dict:  Barcode dictionary made from barcode file, includes barcode and counter as values for keys
+    :param sample_dict:  sample dictionary made from samplesheet, used for adding number of bcodes found per sample
     :return:  writes/appends the command, start and finish, and final output of demultiplex script to log file
     """
     #  write total demultiplex stats for the script (no split into reference genomes)
@@ -286,9 +343,9 @@ def write_outstats(st_time, fq_path, bcode_file, bcode_dict, sample_dict):
                     # add the total number from bcode dict to the sample dict
                     try:
                         sample_dict[bcode_key][2].append(bcode_val[1])
-                    except:
+                    except ValueError:
+                        # the barcode found doesnt match to a sample in dict, don't add it
                         continue
-
 
             percent_partitioned = (total_pcount / total_rcount) * 100
             reads = f'\nTotal reads in PE files: {total_rcount}\n'
@@ -298,24 +355,23 @@ def write_outstats(st_time, fq_path, bcode_file, bcode_dict, sample_dict):
             outfile.write(partitioned)
             outfile.write(percent_p)
 
-
-        # write the outstats of each demultiplexed reference folder.  Get just the directories from sample_dict[index][0]
+        # write the outstats of each demultiplexed reference folder. Get just the directories from sample_dict[index][0]
         ref_dirs = []
         for sam_key, sam_val in sample_dict.items():
             if sam_val[0] not in ref_dirs:
                 ref_dirs.append(sam_val[0])
 
         # write the stats for each split reference directories log
-        for dir in ref_dirs:
-            if dir != 'unmatched':
-                ref_dir_path = f"{os.path.split(fq_path)[0]}/{dir}/log/{dir}.demultiplex.stats"
+        for r_dir in ref_dirs:
+            if r_dir != 'unmatched':
+                ref_dir_path = f"{os.path.split(fq_path)[0]}/{r_dir}/log/{r_dir}.demultiplex.stats"
                 header_line = "Sample_name\tIndex_name\ttotal_entries\n"
 
                 with open(ref_dir_path, 'w') as ref_out:
                     ref_out.write(header_line)
 
                     for sam_key, sam_val in sample_dict.items():
-                        if sam_val[0] == dir:
+                        if sam_val[0] == r_dir:
                             log_line = f"{sam_val[1]}\t{sam_key}\t{sam_val[2][0]}\n"
                             ref_out.write(log_line)
 
@@ -348,7 +404,7 @@ if __name__ == '__main__':
             log_path = f"{path_name}/{sample_val[0]}/log"
             Path(log_path).mkdir(parents=True, exist_ok=True)
 
-    # get a list of the chunked data to demultiplex base doff fastq_R1 path/name
+    # get a list of the chunked data to demultiplex based off fastq_R1 path/name
     fq_chunks = os.listdir(f'{path_name}/chunks')
     fq_read1 = [f'{path_name}/chunks/{i}' for i in fq_chunks if '_R1' in i]
 
@@ -366,4 +422,5 @@ if __name__ == '__main__':
     ####################################  write out final stats  ###############################################
 
     # write the stdout for the barcodes founds in the file.  total reads, etc.
-    write_outstats(st_time=None, fq_path=fastq_file1, bcode_file=barcode_file, bcode_dict=demultiplexed_stats, sample_dict=sample_paths)
+    write_outstats(st_time=None, fq_path=fastq_file1, bcode_file=barcode_file, bcode_dict=demultiplexed_stats,
+                   sample_dict=sample_paths)
