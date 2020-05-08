@@ -273,6 +273,7 @@ def split_fq(fastq):
 
                         # apply the random incremental integers to the coordinates instead of 0:0
                         record['name'] = record['name'].replace(':0:0   ', f':{x_coord}:{y_coord}   ')
+                        record2['name'] = record2['name'].replace(':0:0   ', f':{x_coord}:{y_coord}   ')
 
                         rand_x = rand_x + 1  # increment so next coordinate isn't the same.
                         rand_y = rand_y + 1  # increment so next coordinate isn't the same.
