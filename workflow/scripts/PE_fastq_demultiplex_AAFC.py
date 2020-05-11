@@ -218,8 +218,8 @@ def split_fq(fastq):
     # make the barcode and sample dictionaries
     barcodes, samples = make_dicts(barcode_file, sample_sheet)
     _, samples2 = make_dicts(barcode_file, sample_sheet)
-    rand_x = int(randint(1, 1000))  # random x_coord to start on, so each multiprocess doesn't make same numbers
-    rand_y = int(randint(1, 1000))  # random y_coord to start on, so each multiprocess doesn't make same numbers
+    rand_x = int(randint(1, 100000))  # random x_coord to start on, so each multiprocess doesn't make same numbers
+    rand_y = int(randint(1, 10000))  # random y_coord to start on, so each multiprocess doesn't make same numbers
 
     with open(fastq) as f1, open(fastq2) as f2:
 
@@ -267,16 +267,17 @@ def split_fq(fastq):
 
                 if run_id == run_id2:
 
-                    if run_id[-3:] == '0:0':  # In house data had an issue where coordinates were 0:0 for all lines.
+                    if ':0:0' in run_id:  # In house data had an issue where coordinates were 0:0 for all lines.
                         x_coord = str(rand_x)
                         y_coord = str(rand_y)
 
                         # apply the random incremental integers to the coordinates instead of 0:0
-                        record['name'] = record['name'].replace(':0:0   ', f':{x_coord}:{y_coord}   ')
-                        record2['name'] = record2['name'].replace(':0:0   ', f':{x_coord}:{y_coord}   ')
+                        run_id = run_id.replace(':0:0', f'{x_coord}:{y_coord}')
+                        record['name'] = f'{run_id} {read_id1}'  # recreate the record name for R1 with coordinates
+                        record2['name'] = f'{run_id} {read_id2}'  # recreate the record name for R2 with coordinates
 
-                        rand_x = rand_x + 1  # increment so next coordinate isn't the same.
-                        rand_y = rand_y + 1  # increment so next coordinate isn't the same.
+                        rand_x += 1  # increment so next coordinate isn't the same.
+                        rand_y += 1  # increment so next coordinate isn't the same.
 
                     # add the record information to the samples dictionary as a string
                     fastq1 = f"{record['name']}\n{sequence}\n+\n{quality}\n"
