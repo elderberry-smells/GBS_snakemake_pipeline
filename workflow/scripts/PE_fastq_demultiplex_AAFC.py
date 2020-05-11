@@ -218,8 +218,8 @@ def split_fq(fastq):
     # make the barcode and sample dictionaries
     barcodes, samples = make_dicts(barcode_file, sample_sheet)
     _, samples2 = make_dicts(barcode_file, sample_sheet)
-    rand_x = int(randint(1, 100000))  # random x_coord to start on, so each multiprocess doesn't make same numbers
-    rand_y = int(randint(1, 10000))  # random y_coord to start on, so each multiprocess doesn't make same numbers
+    rand_x = int(randint(1, 1000000))  # random x_coord to start on, so each multiprocess doesn't make same numbers
+    rand_y = int(randint(1, 100000))  # random y_coord to start on, so each multiprocess doesn't make same numbers
 
     with open(fastq) as f1, open(fastq2) as f2:
 
@@ -264,6 +264,8 @@ def split_fq(fastq):
                 # double check that the run_ids match between read1 and read 2
                 run_id = record['name'].split(' ')[0]
                 run_id2 = record2['name'].split(' ')[0]
+                read_id1 = record['name'].split(' ')[1]
+                read_id2 = record2['name'].split(' ')[1]
 
                 if run_id == run_id2:
 
@@ -298,7 +300,7 @@ def split_fq(fastq):
                     lines2 = []
 
                 else:
-                    print('your fastq file formats are not matching.  could be issues with fastq files')
+                    print('your fastq file formats are not matching.  Could be issues with fastq files')
                     continue
 
     # write the files for the sample dictionary entries for read 1
@@ -342,10 +344,10 @@ def write_outstats(st_time, fq_path, bcode_file, bcode_dict, sample_dict):
                     total_pcount += bcode_val[1]
                     total_rcount += bcode_val[1]
 
-                    # add the total number from bcode dict to the sample dict
-                    try:
+                    # add the total number from bcode dict to the sample dict, only if that barcode is in the sample dictionary
+                    if bcode_key in sample_dict:
                         sample_dict[bcode_key][2].append(bcode_val[1])
-                    except ValueError:
+                    else:
                         # the barcode found doesnt match to a sample in dict, don't add it
                         continue
 
