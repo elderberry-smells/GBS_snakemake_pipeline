@@ -218,8 +218,8 @@ def split_fq(fastq):
     # make the barcode and sample dictionaries
     barcodes, samples = make_dicts(barcode_file, sample_sheet)
     _, samples2 = make_dicts(barcode_file, sample_sheet)
-    rand_x = int(randint(1, 1000000))  # random x_coord to start on, so each multiprocess doesn't make same numbers
-    rand_y = int(randint(1, 100000))  # random y_coord to start on, so each multiprocess doesn't make same numbers
+    rand_x = int(randint(1000000, 9000000))  # random x_coord to start on, so each multiprocess doesn't make same numbers
+    rand_y = int(randint(1000000, 9000000))  # random y_coord to start on, so each multiprocess doesn't make same numbers
 
     with open(fastq) as f1, open(fastq2) as f2:
 
