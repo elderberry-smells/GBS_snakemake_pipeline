@@ -11,8 +11,8 @@ rule split:
         p2 = chunk_prefix2,
         l = split_number
     output:
-        expand("chunks/{split_file}", split_file=split_R1),
-        expand("chunks/{split_file}", split_file=split_R2)
+        temp(expand("chunks/{split_file}", split_file=split_R1)),
+        temp(expand("chunks/{split_file}", split_file=split_R2))
     shell:
         "zcat {input.r1} | split -l {params.l} --additional-suffix=.fq - {params.p1}; "
         "zcat {input.r2} | split -l {params.l} --additional-suffix=.fq - {params.p2}"
