@@ -17,6 +17,7 @@ def listed_bams(bam_path):
 
 
 #### Inputs and Rules ####
+home_dir = Path.home()
 configfile: f'{home_dir}/gbs/GBS_snakemake_pipeline/config/config_vcf.yaml'
 
 # take the outdir input from the configfile.yaml and make that the working directory if not exists
