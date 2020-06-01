@@ -3,10 +3,10 @@ rule trimmomatic:
         f1 = "{ref_dir}/demultiplex/{sample}.1.fastq",
         f2 = "{ref_dir}/demultiplex/{sample}.2.fastq"
     output:
-        p1 = "{ref_dir}/trimmomatic/{sample}.1.paired.fastq",
-        u1 = "{ref_dir}/trimmomatic/{sample}.1.unpaired.fastq",
-        p2 = "{ref_dir}/trimmomatic/{sample}.2.paired.fastq",
-        u2 = "{ref_dir}/trimmomatic/{sample}.2.unpaired.fastq"
+        p1 = temp("{ref_dir}/trimmomatic/{sample}.1.paired.fastq"),
+        u1 = temp("{ref_dir}/trimmomatic/{sample}.1.unpaired.fastq"),
+        p2 = temp("{ref_dir}/trimmomatic/{sample}.2.paired.fastq"),
+        u2 = temp("{ref_dir}/trimmomatic/{sample}.2.unpaired.fastq")
     params:
         trim = f"{home_dir}/miniconda3/envs/gbs/share/trimmomatic-0.39-1/adapters/TruSeq2-PE.fa"
     log:
