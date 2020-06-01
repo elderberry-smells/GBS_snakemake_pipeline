@@ -3,7 +3,7 @@ rule bwa_map:
         r1 = "{ref_dir}/trimmomatic/{sample}.1.paired.fastq",
         r2 = "{ref_dir}/trimmomatic/{sample}.2.paired.fastq"
     output:
-        bam = "{ref_dir}/mapped_reads/{sample}.bam"
+        bam = temp("{ref_dir}/mapped_reads/{sample}.bam")
     params:
         readgroup = lambda wildcards: f"@RG\\tID:{lib_id}\\tSM:{wildcards.sample}\\tPL:ILLUMINA",
         ref = lambda wildcards: sam_ref[wildcards.sample]
