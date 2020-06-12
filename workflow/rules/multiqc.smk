@@ -1,19 +1,18 @@
-rule fastqc:
+rule zipup_demux:
+    # we can zip up everything that remains (except for the bams which we need for VCF creation)
     input:
-        sbams = expand("{sort_out}.bam", sort_out=sort_output)
-    output:
-        expand("{fastqc}.{read}_fastqc.html", fastqc=fastqc_output, read=[1, 2])
-    threads: 16
+        multi = expand("{ref_dir}/log/multiqc_report.html", ref_dir=unique_dirs)
+    output: expand("{ref_dir}/demultiplex.tar.gz", ref_dir=unique_dirs)
+    threads: 1
     run:
         for i in unique_dirs:
-            shell("fastqc -o {i}/log/fastqc/ -t {threads} {i}/demultiplex/*.fastq")
+            shell("tar -czvf {i}/demultiplex.tar.gz {i}/demultiplex/; rm -rf {i}/demultiplex/")
 
 
-rule multiqc:
+rule zipup_unmatched:
     input:
-        expand("{fastqc}.{read}_fastqc.html", fastqc=fastqc_output, read=[1, 2])
-    output:
-        expand("{ref_dir}/log/multiqc_report.html", ref_dir=unique_dirs)
-    run:
-        for i in unique_dirs:
-            shell("multiqc {i}/log -o {i}/log/")
+        # run after the demultiplex folders have been all zipped up
+        demux_zip = expand("{ref_dir}/demultiplex.tar.gz", ref_dir=unique_dirs)
+    output: "unmatched.tar.gz"
+    threads: 1
+    shell: "tar -czvf unmatched.tar.gz unmatched/ ; rm -rf unmatched/"
