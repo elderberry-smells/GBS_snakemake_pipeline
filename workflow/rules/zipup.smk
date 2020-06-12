@@ -1,18 +1,18 @@
 rule zipup_demux:
-    # we can zip up everything that remains (except for the bams, those will need to be set until VCF made)
-    input: 
-        multi = expand("{reference_folder}/log/mutliqc_report.html", reference_folder=unique_dirs),
-        demux_folder = "{reference_folder}/demultiplex/"  # get all the demux folders from pipeline
-    output: "{reference_folder}/demultiplex.tar.gz"
+    # we can zip up everything that remains (except for the bams which we need for VCF creation)
+    input:
+        multi = expand("{ref_dir}/log/multiqc_report.html", ref_dir=unique_dirs)
+    output: expand("{ref_dir}/demultiplex.tar.gz", ref_dir=unique_dirs)
     threads: 1
-    shell: "tar -czvf {output} {input.demux_folder}; rm -rf {input.demux_folder}"
+    run:
+        for i in unique_dirs:
+            shell("tar -czvf {i}/demultiplex.tar.gz {i}/demultiplex/; rm -rf {i}/demultiplex/")
 
 
 rule zipup_unmatched:
-    input: 
-        multi = expand("{reference_folder}/log/mutliqc_report.html", reference_folder=unique_dirs),
-        unmatched_folder = "unmatched/"
-    output: 'unmatched.tar.gz'
+    input:
+        # run after the demultiplex folders have been all zipped up
+        demux_zip = expand("{ref_dir}/demultiplex.tar.gz", ref_dir=unique_dirs)
+    output: "unmatched.tar.gz"
     threads: 1
-    shell:  "tar -czvf {output} {input.unmatched_folder}; rm -rf {input.unmatched_folder}"
-
+    shell: "tar -czvf unmatched.tar.gz unmatched/ ; rm -rf unmatched/"
