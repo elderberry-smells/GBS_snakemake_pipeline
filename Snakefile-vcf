@@ -88,18 +88,3 @@ rule split_vcf:
         for chr in chr_list:
             save_name = f"chromsomes/{p_dir}.{chr}.vcf"
             shell("bcftools view -r {chr} {input.vcf} > {save_name}")
-
-
-'''    
-rule split_vcf:
-    input:
-        vcf = "calls/{vcf_name}.vcf.gz",
-        csi = "calls/{vcf_name}.vcf.gz.csi"
-    params:
-        chrom = lambda wildcards: {wildcards.chrom}
-    output: "calls/{vcf_name}.{chrom}.vcf"
-    shell: "bcftools view -r {params.chrom} {input.vcf} > {output}"
-'''
-#add in filtering of each chromosome VCF
-#add in genomic diversity analysis we could commonly use?  like a PCA or something.  start by converting each VCF
-#into a scikit-allel object first?
