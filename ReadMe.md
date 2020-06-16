@@ -18,6 +18,7 @@ An Example Workflow:
 - End to end processing with only 2 command line calls to GridEngine. One for producing BAMs, one for producing VCF's
 - Quality control - statictics produced for each sample and summarized in a MultiQC report 
 - Designed to run on high performance clusters
+- Clean data management.  This pipeline will remove all the intermediate files, and zip up the demultiplex files once complete to save disc space on your system.
 - Custom iGenomics Riptide GBS library processing
 - Ease of use - you need to only provide the tool with paths to a sample sheet, barcode file and a reference genome
 
@@ -93,7 +94,13 @@ Take a list of BAM directories, and produce a single VCF file from all the BAM f
     `cntrl-o` to save
     
     `cntrl-x` to exit
-
+    
+2. (optional) Create a directory for your VCF output (the same directory name as the config-vcf.yaml output path) and cd into that directory so your snakemake ouput log lives with the VCF file.  The name of the VCF will be whatever you name the output folder!
+    
+    ```shell script
+    $ mkdir vcf_output/ && cd vcf_output
+    ```
+    
 2. Run the pipeline by submitting the process via shell script to the GridEngine queue in the terminal.
 
     ```shell script
