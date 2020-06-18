@@ -18,73 +18,65 @@ def listed_bams(bam_path):
 
 def chromosome_list(chromfile):
     chromosomes = []
+    scaffolds = []
     with open(chromfile, 'r') as chr:
         for line in chr:
             content=line.split()
-            chromosomes.append(content[0])
+            if 'scaffold' in content[0].lower():
+                scaffolds.append(content[0])
+            else:
+                chromosomes.append(content[0])
 
-    return chromosomes
+    # write out the scaffolds if present
+    if len(scaffolds) > 0:
+        scaffold = 'scaffolds.txt'
+        with open(scaffold, 'w') as scaf:
+            for line in scaffolds:
+                scaf.write(line + '\n')
+    else:
+        scaffold = False
+
+    return chromosomes, scaffold
 
 
 #### Inputs and Rules ####
 home_dir = Path.home()
-configfile: f'{home_dir}/gbs/GBS_snakemake_pipeline/config/config_vcf.yaml'
+configfile: f'{home_dir}/gbs2/config/config_vcf.yaml'
 
 # take the outdir input from the configfile.yaml and make that the working directory if not exists
 out_path = config['outfile']
 Path(out_path).mkdir(parents=True, exist_ok=True)
+workdir: out_path
 
 # get the info out of the config file into variables
 p_dir = Path(out_path).parts[-1]  # the final folder in the outfile entry for snp file naming
 reference = config['reference']
 chr_file = f"{reference}.fai"
-chr_list = chromosome_list(chr_file)
 
-workdir: out_path
+try:
+    chr_list, scaffolds = chromosome_list(chr_file)
+
+    if scaffolds:  # add on to the list to make a vcf for chromosomes (if any)
+        chr_list.append("scaffolds")
+
+except AttributeError as exception:
+    print(f"{exception}\n"
+          f"Your reference genome has not been indexed.  Please run the following cmnd in the reference directory\n"
+          f"$ bwa index -a bwtsw {reference}")
+
+split_chr = config['split']  # determine from config if the VCF should be split into parts when running bcftools
 
 # generate the bams.list file for this run into the working directory
 listed_bams(config['sample_directories'])
 
 rule all:
     input:
-        expand("{vcf_name}.vcf.gz", vcf_name=p_dir),
-        expand("{vcf_name}.vcf.gz.csi", vcf_name=p_dir),
-        expand("chromsomes/{vcf_name}.{chrom}.vcf", vcf_name=p_dir, chrom=chr_list)
+        expand("chromosomes/filtered/{vcf_name}.{chrom}.recode.vcf" if split_chr
+               else "filtered/{vcf_name}.vcf", vcf_name=p_dir, chrom=chr_list)
 
 
-rule bcf_variantcall:
-    input:
-        bammies = 'bams.list',
-        ref = reference
-    output:  temp("{vcf_name}.vcf")
-    shell:
-         "bcftools mpileup -a AD,DP -f {input.ref} -b {input.bammies} | bcftools call -mv -Ov > {output}"
-
-
-rule compress:
-    input: "{vcf_name}.vcf"
-    output: "{vcf_name}.vcf.gz"
-    # output: "calls/{vcf_name}.vcf.gz"
-    shell: "bgzip -c {input} > {output}"
-
-
-rule index_vcf:
-    input: "{vcf_name}.vcf.gz"
-    output: "{vcf_name}.vcf.gz.csi",
-    shell: "tabix -C -p vcf {input}"
-
-
-rule split_vcf:
-    input:
-        vcf = expand("{vcf_name}.vcf.gz", vcf_name=p_dir),
-        csi = expand("{vcf_name}.vcf.gz.csi", vcf_name=p_dir)
-    params:
-        chrom = lambda wildcards: chr_list
-    output:  expand("chromsomes/{vcf_name}.{chrom}.vcf", vcf_name=p_dir, chrom=chr_list)
-
-          # "calls/{vcf_name}.{params.chrom}.vcf"
-    # shell: "bcftools view -r {params.chrom} {input.vcf} > {output}"
-    run:
-        for chr in chr_list:
-            save_name = f"chromsomes/{p_dir}.{chr}.vcf"
-            shell("bcftools view -r {chr} {input.vcf} > {save_name}")
+# determine from the config file how to handle the VCF outputs
+if split_chr:
+    include: f"{home_dir}/gbs2/workflow/rules2/vcf_by_chrom.smk"
+else:
+    include: f"{home_dir}/gbs2/workflow/rules2/bcftools_vcf.smk"
