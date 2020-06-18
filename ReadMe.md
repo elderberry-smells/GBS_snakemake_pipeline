@@ -74,10 +74,11 @@ Take paired end Fastq files (R1 and R2) and produce sorted BAM files and BAM ind
 - Output of the tool will be in the directory where your fastq files were located. 
 
 #### Generating VCF
-Take a list of BAM directories, and produce a single VCF file from all the BAM files included in those directories.
-1. Update the config/config_vcf.yaml file for the 3 fields
-
+Take a list of BAM directories, and produce a single or multiple VCF files from all the BAM files included in those directories.
+1. Update the config/config_vcf.yaml file for the 4 fields.
 - For format [see config files](workflow/resources/ReadMes/Supporting_Files.md) in supporting file readme.
+- *note* if you want to produce a seperate VCF for each chromosome in the species, put True into split: field.  This will speed up the process as each VCF will be written in parallel.  If your reference has scaffolds, it will produce a seperate VCF just for scaffolds (all together)
+
     ```shell script
     $  nano ~/gbs/GBS_snakemake_pipeline/config/config_vcf.txt
     ```
@@ -87,6 +88,9 @@ Take a list of BAM directories, and produce a single VCF file from all the BAM f
       - "/absolute/path/to/some/more/sorted_bams"
       - "/absolute/path/to/even/more/sorted_bams"
     
+    # produce a single whole genome VCF (False) or split into 1 VCF for each chromosome (True) -- case sensitive
+    split: True
+
     outfile: "/absolute/path/to/output/vcf/directory"
     
     reference: "/absolute/path/to/reference_genome.fasta"
@@ -112,7 +116,11 @@ Take a list of BAM directories, and produce a single VCF file from all the BAM f
 *Notes*:
 - This will give you a job number if submitted properly.
 - You can check to make sure the program is running by typing `qstat`.  Look for `vcf.sh` in the list.  If not, check the `vcf.sh.e(jobnumber)` for why.
-- Final output will be in the folder you designated in the config_vcf.yaml file
+- Final outputs will be in the folder you designated in the config_vcf.yaml file
+- The VCF files will be filtered for some common options, the final VCF can be filtered more to suit needs for each project outside of this pipeline.
+	- max-missing = 0.7
+	- maf = 0.2
+	- minQ = 30
 
 ## Installation
 
