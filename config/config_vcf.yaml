@@ -4,6 +4,8 @@ sample_directories:
   - "/absolute/path/to/some/more/sorted_bams"
   - "/absolute/path/to/even/more/sorted_bams"
 
+# produce a single whole genome VCF (False) or split into 1 VCF per chromosome (True)
+split: True
 
 # assign the directory you would like for the final VCF file.  Will be created if not exists (careful of permissions).
 outfile: "/absolute/path/to/output/vcf/directory"
