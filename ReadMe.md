@@ -25,8 +25,8 @@ An Example Workflow:
 
 ## Table of Contents
 - [Quick Use Guide](#quick-use-guide)
-	-[Generating Bams](#generating-bams)
-	-[Generating VCF](#generating-vcf)
+	- [Generating Bams](#generating-bams)
+	- [Generating VCF](#generating-vcf)
 - [Installation](#installation)
 - [Supporting Files](#supporting-files)
 - [Features](#features)
