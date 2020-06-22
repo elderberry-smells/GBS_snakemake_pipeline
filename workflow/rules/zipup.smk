@@ -6,7 +6,7 @@ rule zipup_demux:
     threads: 16
     run:
         for i in unique_dirs:
-            shell("tar cf - {i}/demultiplex/ | pigz -9 -p 16 > {i}/{i}_demux.tar.gz; rm -rf {i}/demultiplex/")
+            shell("tar cf - {i}/demultiplex/ | pigz -9 -p {threads} > {i}/{i}_demux.tar.gz; rm -rf {i}/demultiplex/")
 
 
 rule zipup_unmatched:
@@ -15,4 +15,4 @@ rule zipup_unmatched:
         demux_zip = expand("{ref_dir}/demultiplex.tar.gz", ref_dir=unique_dirs)
     output: "unmatched.tar.gz"
     threads: 16
-    shell: "tar cf - unmatched/ | pigz -9 -p 16 > unmatched.tar.gz; rm -rf unmatched"
+    shell: "tar cf - unmatched/ | pigz -9 -p {threads} > unmatched.tar.gz; rm -rf unmatched"
