@@ -140,7 +140,7 @@ rule all:
     input:
         expand("{sort_out}.bam", sort_out=sort_output),
         expand("{ref_dirs}/log/multiqc_report.html", ref_dirs=unique_dirs),
-        expand("{ref_dirs}/demultiplex.tar.gz", ref_dirs=unique_dirs),
+        expand("{ref_dirs}/{ref_dir}_demux.tar.gz", ref_dirs=unique_dirs),
         "unmatched.tar.gz"
 
 include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/split.smk"
