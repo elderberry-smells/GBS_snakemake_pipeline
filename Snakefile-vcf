@@ -77,6 +77,6 @@ rule all:
 
 # determine from the config file how to handle the VCF outputs
 if split_chr:
-    include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules2/vcf_by_chrom.smk"
+    include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/vcf_by_chrom.smk"
 else:
-    include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules2/bcftools_vcf.smk"
+    include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/bcftools_vcf.smk"
