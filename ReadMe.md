@@ -209,7 +209,9 @@ Job counts:
 	184	trimmomatic
         1       fastqc
         1       multiqc
-	555
+	1	zipup_demux
+	1	zipup_unmatched
+	557
 ```
 #### Supporting Files
 A list of user inputs to run the program can be found in the [Supporting Files](workflow/resources/ReadMes/Supporting_Files.md) ReadMe.
