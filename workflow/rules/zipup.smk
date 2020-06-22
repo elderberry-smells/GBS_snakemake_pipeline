@@ -3,10 +3,10 @@ rule zipup_demux:
     input:
         multi = expand("{ref_dir}/log/multiqc_report.html", ref_dir=unique_dirs)
     output: expand("{ref_dir}/demultiplex.tar.gz", ref_dir=unique_dirs)
-    threads: 1
+    threads: 16
     run:
         for i in unique_dirs:
-            shell("tar -czvf {i}/demultiplex.tar.gz {i}/demultiplex/; rm -rf {i}/demultiplex/")
+            shell("tar cf - {i}/demultiplex/ | pigz -9 -p 16 > {i}/{i}_demux.tar.gz; rm -rf {i}/demultiplex/")
 
 
 rule zipup_unmatched:
@@ -14,5 +14,5 @@ rule zipup_unmatched:
         # run after the demultiplex folders have been all zipped up
         demux_zip = expand("{ref_dir}/demultiplex.tar.gz", ref_dir=unique_dirs)
     output: "unmatched.tar.gz"
-    threads: 1
-    shell: "tar -czvf unmatched.tar.gz unmatched/ ; rm -rf unmatched/"
+    threads: 16
+    shell: "tar cf - unmatched/ | pigz -9 -p 16 > unmatched.tar.gz; rm -rf unmatched"
