@@ -139,8 +139,8 @@ lib_id = file_name.split('_')[0]  # just get the library name without _R1 or _R2
 rule all:
     input:
         expand("{sort_out}.bam", sort_out=sort_output),
-        expand("{ref_dirs}/log/multiqc_report.html", ref_dirs=unique_dirs),
-        expand("{ref_dirs}/{ref_dirs}_demux.tar.gz", ref_dirs=unique_dirs),
+        expand("{ref_dir}/log/multiqc_report.html", ref_dir=unique_dirs),
+        expand("{ref_dir}/{ref_dir}_demux.tar.gz", ref_dir=unique_dirs),
         "unmatched.tar.gz"
 
 include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/split.smk"
