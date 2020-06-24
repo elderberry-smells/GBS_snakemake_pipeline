@@ -2,6 +2,7 @@ name: gbs
 channels:
   - conda-forge
   - bioconda
+  - anaconda
   - defaults
 dependencies:
   - _libgcc_mutex=0.1=conda_forge
@@ -14,8 +15,8 @@ dependencies:
   - bcftools=1.9=h68d8f2e_9
   - bwa=0.7.17=hed695b0_7
   - bzip2=1.0.8=h516909a_2
-  - ca-certificates=2020.4.5.1=hecc5488_0
-  - certifi=2020.4.5.1=py36h9f0ad1d_0
+  - ca-certificates=2020.1.1=0
+  - certifi=2020.6.20=py36_0
   - chardet=3.0.4=py36_1003
   - click=7.1.2=pyh9f0ad1d_0
   - coloredlogs=14.0=py36h9f0ad1d_1
@@ -77,10 +78,11 @@ dependencies:
   - networkx=2.1=py36_0
   - numpy=1.18.1=py36h95a1406_0
   - openjdk=11.0.1=h600c080_1018
-  - openssl=1.1.1g=h516909a_0
+  - openssl=1.1.1g=h7b6447c_0
   - pandas=1.0.1=py36hb3f55d8_0
   - paramiko=1.18.2=py36_0
   - perl=5.26.2=h516909a_1006
+  - pigz=2.4=h84994c4_0
   - pip=20.0.2=py_2
   - psutil=5.7.0=py36h516909a_0
   - pthread-stubs=0.4=h14c3975_1001
@@ -129,5 +131,5 @@ dependencies:
   - zipp=3.1.0=py_0
   - zlib=1.2.11=h516909a_1006
   - zstd=1.4.4=h3b9ef0a_1
-prefix: ~/miniconda3/envs/gbs
+prefix: /home/AAFC-AAC/jamesbc/miniconda3/envs/gbs
 
