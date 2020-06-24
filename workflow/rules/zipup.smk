@@ -12,7 +12,7 @@ rule zipup_demux:
 rule zipup_unmatched:
     input:
         # run after the demultiplex folders have been all zipped up
-        demux_zip = expand("{ref_dir}/demultiplex.tar.gz", ref_dir=unique_dirs)
+        demux_zip = expand("{ref_dir}/{ref_dir}_demux.tar.gz", ref_dir=unique_dirs)
     output: "unmatched.tar.gz"
     threads: 16
     shell: "tar cf - unmatched/ | pigz -9 -p {threads} > unmatched.tar.gz; rm -rf unmatched"
