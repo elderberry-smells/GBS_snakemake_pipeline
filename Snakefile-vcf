@@ -62,7 +62,7 @@ try:
 except AttributeError as exception:
     print(f"{exception}\n"
           f"Your reference genome has not been indexed.  Please run the following cmnd in the reference directory\n"
-          f"$ bwa index -a bwtsw {reference}")
+          f"$ samtools faidx {reference}")
 
 split_chr = config['split']  # determine from config if the VCF should be split into parts when running bcftools
 
