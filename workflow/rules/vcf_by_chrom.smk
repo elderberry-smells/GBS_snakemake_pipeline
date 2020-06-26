@@ -37,7 +37,7 @@ rule filter_vcf:
  
 rule summarize_filter:
     input:
-         expand("chromosomes/filtered/{vcf_name}.{chrom}.log")
+         expand("chromosomes/filtered/{vcf_name}.{chrom}.log", vcf_name=p_dir, chrom=chr_list)
     params:
         vcf_dir = "chromosomes/filtered",
         scrip = f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/scripts/summary_vcf.py"
