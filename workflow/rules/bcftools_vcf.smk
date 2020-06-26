@@ -15,7 +15,9 @@ rule bcf_split:
 rule filter_vcf:
     input: "{vcf_name}.vcf"
     params: "filtered/{vcf_name}"
-    output: "filtered/{vcf_name}.recode.vcf"
+    output: 
+        vcf = "filtered/{vcf_name}.recode.vcf",
+        logfile = "filtered/{vcf_name}.log"
     wildcard_constraints:
         vcf_name= '[\w]*'
     threads: 1
@@ -26,3 +28,15 @@ rule filter_vcf:
         "--minQ 30 "
         "-recode --recode-INFO-all --out {params}"
 
+
+rule summarize_filter:
+    input:
+         "filtered/{vcf_name}.log"
+    params:
+        vcf_dir = "chromosomes/filtered",
+        scrip = f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/scripts/summary_vcf.py"
+    output: "filtered/filter_summary.txt"
+    wildcard_constraints:
+        vcf_name= '[\w]*'
+    shell:
+        "python3 {params.scrip} -v {params.vcf_dir} -o {output} -s False"
