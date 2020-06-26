@@ -24,7 +24,7 @@ rule filter_vcf:
         vcf = "chromosomes/filtered/{vcf_name}.{chrom}"
     output:
         filtered = "chromosomes/filtered/{vcf_name}.{chrom}.recode.vcf",
-        log = "chromosomes/filtered/{vcf_name}.{chrom}.vcf.log"
+        log = "chromosomes/filtered/{vcf_name}.{chrom}.log"
     wildcard_constraints:
         vcf_name= '[\w]*'
     threads: 1
@@ -33,3 +33,17 @@ rule filter_vcf:
         "--max-missing 0.7 "
         "--minQ 30 "
         "--recode --recode-INFO-all --out {params.vcf}"
+
+ 
+rule summarize_filter:
+    input:
+         expand("chromosomes/filtered/{vcf_name}.{chrom}.log")
+    params:
+        vcf_dir = "chromosomes/filtered",
+        scrip = f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/scripts/summary_vcf.py"
+    output: "chromosomes/filtered/filter_summary.txt"
+    wildcard_constraints:
+        vcf_name= '[\w]*'
+    threads: 1
+    shell:
+        "python3 {params.scrip} -v {params.vcf_dir} -o {output} -s True"
