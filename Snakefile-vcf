@@ -71,10 +71,8 @@ listed_bams(config['sample_directories'])
 
 rule all:
     input:
-        expand("chromosomes/filtered/{vcf_name}.{chrom}.recode.vcf" if split_chr
-               else "filtered/{vcf_name}.vcf", vcf_name=p_dir, chrom=chr_list),
-        "chromosomes/filtered/filter_summary.txt" if split_chr
-         else "filtered/filter_summary.txt"
+        expand(["chromosomes/{vcf_name}.{chrom}.vcf", "chromosomes/{vcf_name}.vcf"] if split_chr
+               else "{vcf_name}.vcf", vcf_name=p_dir, chrom=chr_list)
 
 
 # determine from the config file how to handle the VCF outputs
