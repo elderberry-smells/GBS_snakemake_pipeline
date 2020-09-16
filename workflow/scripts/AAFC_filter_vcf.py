@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from pathlib import Path
 import csv
 import re
@@ -54,7 +55,6 @@ def filter_vcf(infile, filter_params, outfiles):
     total_snps = 0
     post_filter = 0
     
-    # why = {'QUAL': 0, 'INDEL': 0, 'DP': 0, 'DP_HOM': 0, 'DP_HET': 0, 'MISS': 0, 'MAF': 0}
     why = {'QUAL': 0, 'INDEL': 0, 'DP': 0, 'MISS': 0, 'MAF': 0}
     
     for line in infile:
