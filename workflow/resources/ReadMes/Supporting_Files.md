@@ -30,17 +30,27 @@ barcodefile:  "absolute/path/to/barcodes_192.txt"
 
 The config_vcf file has 3 fields to fill out, all are required for program.
 - sample directories can be multiple lines, each pointing to a directory of bams (with correcsponding index files .bai)
-- start each new line of sample directories with 2 spaces, a dash, a space, then path.
-- outfile is the directory where you want the VCF to be generated.  If it doesn't exist, it will be created.
-- reference should be directly to an unzipped reference.fasta file.  
+- start each new line of sample directories with 2 spaces, a dash, a space, then path, copy the format exactly as shown below.
+- split - you can choose to make a VCF per chromosome (True), or run the program as normal (False). This uses multiprocessing and speeds the process up if your genome is large/lots of data in BAMs.
+- outfile is the **directory** where you want the VCF to be generated.  If it doesn't exist, it will be created.
+- reference spath hould be directly to an unzipped reference.fasta file.  
 - reference needs to be indexed using `bwa index reference.fast` if not already done!
 
 ```
+# The absolute path to each directory that houses the .bam files for analysis.
 sample_directories:
   - "/absolute/path/to/some/sorted_bams"
   - "/absolute/path/to/some/more/sorted_bams"
   - "/absolute/path/to/even/more/sorted_bams"
+
+# produce a single whole genome VCF (False) or split into 1 VCF per chromosome (True)
+split: True
+
+# assign the directory you would like for the final VCF file.  Will be created if not exists (careful of permissions).
 outfile: "/absolute/path/to/output/vcf/directory"
+
+
+# Absolute path to the reference you would like every BAM file above to generate SNP calls from.
 reference: "/absolute/path/to/reference_genome.fasta"
 ```
 
