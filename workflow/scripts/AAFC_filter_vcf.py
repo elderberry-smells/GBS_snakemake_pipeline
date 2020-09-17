@@ -106,9 +106,10 @@ def filter_vcf(infile, filter_params, outfiles):
                     continue
                 else:
                     try:
-                        outfiles.writelines(line)
+                        outfiles.writelines(line) 
                     except:
-                        outfiles.writelines(line.decode("utf-8"))  
+                        outfiles.writelines(line.decode("utf-8"))
+                        
         
         elif data.startswith("#CHROM"):
             # make a sample list and add up the population numbers
@@ -123,11 +124,15 @@ def filter_vcf(infile, filter_params, outfiles):
             # write the line to the outfile
             if filter_params['CSV']:
                 skip_col = ['INFO', 'FORMAT']
-                header = [i for i in line.split() if i not in skip_col]
+                try:  # make sure it is decoded if the file was gzipped
+                    header = [i.decode("utf-8") for i in line.split() if i.decode("utf-8") not in skip_col]
+                except:
+                    header = [i for i in line.split() if i not in skip_col]
+                    
                 outfiles.writerow(header)
             else:
                 try:
-                    outfiles.writelines(line)
+                    outfiles.writelines(line)                   
                 except:
                     outfiles.writelines(line.decode("utf-8"))
                                     
@@ -180,7 +185,7 @@ def filter_vcf(infile, filter_params, outfiles):
                         site = f"./.:{pl}:{dp}:{ad}"  # didn't pass the test, make it no data and append it to snp_site for tally
                         snp_site['miss'] += 1
                         if filter_params['CSV']:
-                            line_data.append('NA')
+                            line_data.append('N/A')
                         else:
                             line_data.append(site)
 
@@ -189,7 +194,7 @@ def filter_vcf(infile, filter_params, outfiles):
                             snp_site['miss'] += 1
                             # add the info to the line to write(even though it may not be written in the end after filtering for MISS)
                             if filter_params['CSV']:
-                                line_data.append('NA')
+                                line_data.append('N/A')
                             else:
                                 line_data.append(site)
                             
@@ -199,7 +204,7 @@ def filter_vcf(infile, filter_params, outfiles):
                                 site = site.replace('0/0:', './.:')  # didn't pass the test, make it no data and append it to snp_site for tally
                                 snp_site['miss'] += 1
                                 if filter_params['CSV']:
-                                    line_data.append('NA')
+                                    line_data.append('N/A')
                                 else:
                                     line_data.append(site)
                                 snp_site['miss'] += 1
@@ -209,7 +214,7 @@ def filter_vcf(infile, filter_params, outfiles):
                                 snp_site['dp'][0] += 1  # add snp # tally
                                 snp_site['dp'][1] += int(dp)  # add depth to make avg. depth at end
                                 if filter_params['CSV']:
-                                    line_data.append(f'{ref}/{ref}')
+                                    line_data.append(f'{ref}:{ref}')
                                 else:
                                     line_data.append(site)                        
                             
@@ -218,7 +223,7 @@ def filter_vcf(infile, filter_params, outfiles):
                                 dp_drops['DP_HOMO'] += 1
                                 site = site.replace('1/1:', './.:')  # didn't pass the test, make it no data and append it to snp_site for tally
                                 if filter_params['CSV']:
-                                    line_data.append('NA')
+                                    line_data.append('N/A')
                                 else:
                                     line_data.append(site)
                                 snp_site['miss'] += 1
@@ -228,7 +233,7 @@ def filter_vcf(infile, filter_params, outfiles):
                                 snp_site['dp'][0] += 1  # add snp # tally
                                 snp_site['dp'][1] += int(dp)  # add depth to make avg. depth at end
                                 if filter_params['CSV']:
-                                    line_data.append(f'{alt}/{alt}')
+                                    line_data.append(f'{alt}:{alt}')
                                 else:
                                     line_data.append(site)
                                                     
@@ -238,7 +243,7 @@ def filter_vcf(infile, filter_params, outfiles):
                                 site = site.replace('0/1:', './.:')  # didn't pass the test, make it no data and append it to snp_site for tally
                                 
                                 if filter_params['CSV']:
-                                    line_data.append('NA')
+                                    line_data.append('N/A')
                                 else:
                                     line_data.append(site)
                                     snp_site['miss'] += 1
@@ -251,7 +256,7 @@ def filter_vcf(infile, filter_params, outfiles):
                                 snp_site['dp'][1] += int(dp)  # add depth to make avg. depth at end
                                 
                                 if filter_params['CSV']:
-                                    line_data.append(f'{ref}/{alt}')
+                                    line_data.append(f'{ref}:{alt}')
                                 else:
                                     line_data.append(site)                                                                  
                     
