@@ -118,7 +118,7 @@ def filter_vcf(infile, filter_params, outfiles):
                 
             # add the sample_list items to the dictionary
             for chrom in chromosomes:
-                summarized_data[chrom] = {'sites': 0, 'snps':0, 'dp': 0, 'hets': 0, 'maf': [0, 0]}
+                summarized_data[chrom] = {'sites': 0, 'snps':0, 'dp': 0, 'hets': 0, 'maf': 0}
                 
             # write the line to the outfile
             if filter_params['CSV']:
@@ -302,8 +302,8 @@ def filter_vcf(infile, filter_params, outfiles):
                     summarized_data[chrom]['snps'] += int(snp_site['dp'][0])
                     summarized_data[chrom]['dp'] += snp_site['dp'][1]
                     summarized_data[chrom]['hets'] += snp_site['het']
-                    summarized_data[chrom]['maf'][0] += snp_site['ref']
-                    summarized_data[chrom]['maf'][1] += snp_site['alt']
+                    summarized_data[chrom]['maf'] += maf
+
                         
     summarized_data['totals'] = [total_snps, post_filter, population]
 
@@ -360,10 +360,11 @@ def stat_filter(vcf, out_prefix, filter_params, post_filter_summary, stats_outfi
     stats_outfile.write('\nGenome Distribution of Remaining SNP Sites and Stats:\n\n')
     stats_outfile.write('CHROM\tSITES\t#SNPs\tAVG.DP\t%HET\tAVG.MAF\n')
     for key, val in post_filter_summary.items():
+        # iterate through the keys (chromosome) and return stats on the values (counts, averages)
         try:
             avg_dp = float(val['dp'] / val['snps']) 
             phet =  float(val['hets'] / val['snps'])*100
-            maf = float(1 - (val['maf'][0]/(val['maf'][0] + val['maf'][1])))
+            maf = val['maf']/val['sites']
             
             stats_outfile.write(f"{key}\t{val['sites']}\t{val['snps']}\t{avg_dp:.2f}\t{phet:.2f}\t{maf:.3f}\n")
         except:
