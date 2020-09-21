@@ -7,7 +7,7 @@ This is a filtering script for VCF files (VCF format version 4.2) written in pyt
 
 Filter VCF on missing, quality, depth (general depth, depth for homozygous calls, depth for heterozygous calls), indels (remove or retain) and minor allele frequency.
 
-### Inputs and Outpyts for Program
+### Inputs and Outputs for Program
 
 - VCF file can be compressed, or uncompressed.  
 
