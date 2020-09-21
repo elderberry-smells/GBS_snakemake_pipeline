@@ -76,7 +76,7 @@ Total Samples in VCF: 1477
 SNP sites dropped due to the following parameters:
 	QUAL:	4486604
 	INDEL:	193849
-	DP:	    46480
+	DP:	46480
 	MISS:	4494943
 	MAF:	175014
 
@@ -90,7 +90,7 @@ chr4H	1843	2212995	1.88	17.64	0.261
 chr5H	2902	3432777	1.83	17.58	0.278
 chr6H	2459	2925840	1.87	18.91	0.274
 chr7H	3675	4427481	2.00	19.34	0.282
-chrUn	390	    473668	2.05	25.12	0.294            
+chrUn	390	473668	2.05	25.12	0.294            
 ```
 
 ## 2. Windowed Variance 
