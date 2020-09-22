@@ -1,13 +1,13 @@
 # VCF Analaysis Tools
 
-## 1 . VCF Filter Program
+## **1 . VCF Filter Program**
 
-### Description
+### **Description**
 This is a filtering script for VCF files (VCF format version 4.2) written in python (3.6).  This script allows you to set parameters and filter out SNP sites that match or exceed parameters indicated. 
 
 Filter VCF on missing, quality, depth (general depth, depth for homozygous calls, depth for heterozygous calls), indels (remove or retain) and minor allele frequency.
 
-### Inputs and Outputs for Program
+### **Inputs and Outpyts for Program**
 
 - VCF file can be compressed, or uncompressed.  
 
@@ -18,7 +18,7 @@ Filter VCF on missing, quality, depth (general depth, depth for homozygous calls
     - best suited to run this program once you are satisfied with final filtering of VCF, as this program can not filter a CSV file. This also automatically removes indels.
 
 
-### How to use the filter progam:
+### **How to use the filter progam:**
 Navigate to the directory of the VCF file and call the program with thte following:
 
 ```
@@ -27,7 +27,7 @@ python3 ~/gbs/GBS_snakemake_pipeline/workflow/scripts/AAFC_filter_vcf.py
 Following the command, you can add your arguments for filtering, as seen in options below.
 
 
-### Arguments for filter program:
+### **Arguments for filter program:**
 | Call | Extended Call | Required | Value | Description |
 | :--: | :----: | :-----: | :----------: | :--------------- |
 | -vcf | --vcf | Yes | PATH | VCF file you want to filter.  Can be compressed with gzip or uncompressed |
@@ -41,7 +41,7 @@ Following the command, you can add your arguments for filtering, as seen in opti
 | -removeindels | --removeindels | Optional | NO INPUT | Remove SNP site if REF or ALT is an indel. No value required after [-removeindels] |
 | -csv | --csvout | Optional | NO INPUT | After filtering, remove headers and return a human readable CSV version of the VCF. No value required after [-csv] |
 
-### Stats output for the filter program
+### **Stats output for the filter program**
 The program will have 2 outputs when run, both of which will be located in the -out directory in your arguments.
 
 - Filtered VCF - This file will be named the same as your input VCF file, but with a .filtered.vcf suffix
@@ -76,7 +76,7 @@ Total Samples in VCF: 1477
 SNP sites dropped due to the following parameters:
 	QUAL:	4486604
 	INDEL:	193849
-	DP:	46480
+	DP:	    46480
 	MISS:	4494943
 	MAF:	175014
 
@@ -90,20 +90,22 @@ chr4H	1843	2212995	1.88	17.64	0.261
 chr5H	2902	3432777	1.83	17.58	0.278
 chr6H	2459	2925840	1.87	18.91	0.274
 chr7H	3675	4427481	2.00	19.34	0.282
-chrUn	390	473668	2.05	25.12	0.294            
+chrUn	390	    473668	2.05	25.12	0.294            
 ```
 
-## 2. Windowed Variance 
+## **2. Windowed Variance**
 
-### Description
+### **Description**
 Analyze a VCF file (VCF format version 4.2) for # of SNPs across genome, in a windowed breakdown of each chromosome. The program will output a colored graph that will plot the number of SNPs per window across each chromosome.
 
-The VCF file needs to be uncompressed and have headers for this program to work!
+The VCF file can be uncompressed or compressed (gzip) and **MUST** have headers for this program to work!
 
 The headers contain the information about each chromosomes (names and lengths) required for the graphing and breakdown. 
 
-### How to use the program
-Simply direct the program to a VCF file, give it an output option and the window size you would like to analyze.  The output will be saved into the same directory as the VCF file.
+### **How to use the program**
+Simply direct the program to a VCF file and the window size you would like to analyze.  Window is just a number of positions along the genome to sum the # of SNPs in.  
+
+The output will be saved into the same directory as the VCF file, and be named vcf_name.coverage.png
 
 example:
 ```
