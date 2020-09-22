@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from pathlib import Path
 import argparse
 import gzip
@@ -14,8 +13,7 @@ from matplotlib import ticker
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Get a summary of vcf file depth')
-    parser.add_argument('-v', '--vcf', required=True, help="Path to the VCF file")
-    parser.add_argument('-o', '--out', help='Path to directory for output.  File name will be [final directory]_coverage.png')
+    parser.add_argument('-v', '--vcf', required=True, help="Path to the VCF file.  VCF file must not be compressed")
     parser.add_argument('-w', '--window', required=True, help='Size of window for coverage analysis')
     args = parser.parse_args()
     return args
@@ -26,7 +24,7 @@ def windowed_variance(window, vcf_file):
     Go through the vcf file and return a sample depth per chromosome dictionary and total depth average
     :param vcf_file: Path Object for VCF file
     :param window:  Size of window to analyze the VCF file
-    :return: Windowed Variance array for graphing
+    :return: Windowed Variance graph
     '''
     bin_size = int(window)
     zipped_file = True if '.gz' in vcf_file.name else False
@@ -75,12 +73,6 @@ def windowed_variance(window, vcf_file):
                         pos_key = int(floor(float(pos)/float(window))) * int(window)
                         if pos_key == 0:
                             pos_key = int(window)
-                        # other parts of the information in the VCF file would be the following
-                        # ref = snp[3]
-                        # alt = snp[4]
-                        # qual = snp[5]
-                        # info = snp[7]
-                        # call_format = snp[8]
 
                         # count the SNPs in the sample columns if called (ie not ./.)                       
                         for site in snp[9:]:  # just the sample information in a loop
@@ -133,12 +125,6 @@ def windowed_variance(window, vcf_file):
                         pos_key = int(floor(float(pos)/float(window))) * int(window)
                         if pos_key == 0:
                             pos_key = int(window)
-                        # other information in the VCF file can be called with the follwoing 
-                        # ref = snp[3]
-                        # alt = snp[4]
-                        # qual = snp[5]
-                        # info = snp[7]
-                        # call_format = snp[8]
 
                         # count the SNPs in the sample columns if called (ie not ./.)                       
                         for site in snp[9:]:  # just the sample information in a loop
@@ -158,20 +144,20 @@ def plot_windows(df, window):
     
     chroms = list(df.columns)
     num_plots = len(chroms)
-    cm = plt.get_cmap('viridis')
+    cm = plt.get_cmap('viridis')  # fun color scheme
     color_list = [cm(1.*i/num_plots) for i in range(num_plots)] # generate the color list evenly across the color map viridis
 
     # get the X axis data split from scientific notation (just leave the value, remove the power) so we can add power to axis label instead
     # this just cleans the look of the data to not have notation in each subplot
-    sci_not = '{:.2E}'.format(max(df.index)).split('E')[1] # just grab the power value ie) 2.0E+12 = +12
+    sci_not = '{:.2E}'.format(max(df.index)).split('E')[1] # just grab the power value ie) 2.0E+12 = +12.  This is used for X Axis Label
 
     x_axis_normalized = ['{:.1f}'.format(x/float(f'1E{sci_not}')) for x in df.index] 
-
-
     
+    # get the number of subplots even to number of chromosomes
     fig, axes = plt.subplots(nrows=1, ncols=num_plots, sharey=True)
     fig.set_size_inches(12, 6, forward=True)
     fig.subplots_adjust(hspace=0, wspace=0)
+
     # set font for the title
     fig.suptitle(f'Genome Distribution of SNPs by Chromosome ({window}bp window)', fontsize='large', fontweight='bold')
     fig.text(0.5, 0.04, f'Position on Chromosome (1E{sci_not})', ha='center', fontsize='medium', fontweight='bold')
@@ -192,25 +178,14 @@ def main():
     args = get_arguments()
     vcf_file = args.vcf
     window = args.window
-    
-    if args.out:
-        outdir = args.out
-    else:
-        outdir = Path.cwd()
 
-
-    #####  Get some information on VCF file location, CWD, etc.
     vcf = Path(vcf_file)  # get the path to the VCF file into Path Class
-    out = Path(outdir)
-    out = out / f'{out.name}_coverage.png'
 
-    # Determine if cwd is same as vcf file directory provided, if not get the paths sorted for data handling.
-    if not vcf.is_absolute():
-        vcf = vcf.absolute()
-    if not out.is_absolute():
-        out = out.absolute()
+    # generate the outfile save name (graph)
+    outdir = Path(vcf_file).parents[0]
+    out = outdir / f'{vcf.stem}.coverage.png'
 
-    chrom_counts = windowed_variance(window, vcf)
+    chrom_counts = windowed_variance(window, vcf)  # generates the windowed data (# SNPs per window)
     
     df = pd.DataFrame(chrom_counts) # convert to dataframe to visualize data
     coverage = plot_windows(df, window)
