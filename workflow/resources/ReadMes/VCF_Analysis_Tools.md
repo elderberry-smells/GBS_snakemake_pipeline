@@ -113,6 +113,8 @@ $ python3 ~/gbs/GBS_snakemake_pipeline/workflow/scripts/windowed_variance.py -v 
 ```
 
 ### Graphical Output of Program
-The following output is from an output of over ~1500 barley lines in a VCF file. The genome consists of 7 chromosomes and Scaffolds (designated CHRUN)
+The following output is from an output of over ~1500 barley lines in a VCF file. The genome consists of 7 chromosomes and Scaffolds (designated CHRUN).  
 ![windowed_variance](https://github.com/elderberry-smells/GBS_snakemake_pipeline/blob/master/workflow/resources/images/example_VCF_coverage.png?raw=true)
 
+The program makes a subplot for each individual chromosome in line, and allocate a color based on a scale for each for a visually appealing graph.  Here is an example of a VCF file covering roughly 400 sunflower species.
+![sunflower_coverage](https://github.com/elderberry-smells/GBS_snakemake_pipeline/blob/master/workflow/resources/images/example_sunflower_coverage.png?raw=true)
