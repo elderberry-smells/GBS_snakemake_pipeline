@@ -116,7 +116,7 @@ Take a list of BAM directories, and produce a single or multiple VCF files from 
 3. Done!
 
 (optional) 4. Process the VCF file 
-Check out the [VCF_Analysis_tools ReadMe](workflow/resources/ReadMes/VCF_Analysis_Toools.md) to see a couple tools to process and visualize your VCF
+Check out the [VCF_Analysis_tools ReadMe](https://github.com/elderberry-smells/GBS_snakemake_pipeline/blob/master/workflow/resources/ReadMes/VCF_Analysis_Tools.md) to see a couple tools to process and visualize your VCF
 - A filtering program detailed in the the following ReadMe can be used to filter the data for a variety of parameters
 - Determine coverage of SNPs across the genome and graph that using the windowed_variance.py script
 
