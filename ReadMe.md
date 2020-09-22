@@ -115,14 +115,17 @@ Take a list of BAM directories, and produce a single or multiple VCF files from 
 
 3. Done!
 
+(optional) 4. Process the VCF file 
+Check out the [VCF_Analysis_tools ReadMe](workflow/resources/ReadMes/VCF_Analysis_Toools.md) to see a couple tools to process and visualize your VCF
+- A filtering program detailed in the the following ReadMe can be used to filter the data for a variety of parameters
+- Determine coverage of SNPs across the genome and graph that using the windowed_variance.py script
+
+
 *Notes*:
 - This will give you a job number if submitted properly.
 - You can check to make sure the program is running by typing `qstat`.  Look for `vcf.sh` in the list.  If not, check the `vcf.sh.e(jobnumber)` for why.
 - Final outputs will be in the folder you designated in the config_vcf.yaml file
-- The VCF files will be filtered for some common options, the final VCF can be filtered more to suit needs for each project outside of this pipeline.
-	- max-missing = 0.7
-	- maf = 0.2
-	- minQ = 30
+
 
 ## Installation
 
