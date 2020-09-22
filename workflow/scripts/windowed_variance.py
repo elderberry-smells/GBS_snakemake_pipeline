@@ -13,7 +13,7 @@ from matplotlib import ticker
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Get a summary of vcf file depth')
-    parser.add_argument('-v', '--vcf', required=True, help="Path to the VCF file.  VCF file must not be compressed")
+    parser.add_argument('-v', '--vcf', required=True, help="Path to the VCF file.  VCF file can be compressed gzip or uncompressed")
     parser.add_argument('-w', '--window', required=True, help='Size of window for coverage analysis')
     args = parser.parse_args()
     return args
