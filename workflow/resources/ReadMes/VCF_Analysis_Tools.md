@@ -5,7 +5,7 @@
 ### **Description**
 This is a filtering script for VCF files (VCF format version 4.2) written in python (3.6).  This script allows you to set parameters and filter out SNP sites that match or exceed parameters indicated. 
 
-Filter VCF on missing, quality, depth (general depth, depth for homozygous calls, depth for heterozygous calls), indels (remove or retain) and minor allele frequency.
+Filter VCF on missing, quality, depth (general depth, depth for homozygous calls, depth for heterozygous calls), indels (remove or retain), biallelic sites (remove or retain), and minor allele frequency.
 
 ### **Inputs and Outputs for Program**
 
@@ -38,6 +38,7 @@ Following the command, you can add your arguments for filtering, as seen in opti
 | -mindp | --minimum_snp_depth | Optional | INT 1 - x | Remove SNP site when snp depth is BELOW [minimimum_snp_depth], over_rides homo/het depth if higher |
 | -dphom | --min_depth_homozygous | Optional | INT 1 - x | Do not count homozygous SNP for sample if depth doesn't match or exceed [min_depth_homozygous] |
 | -dphet | --min_depth_heterozygous | Optional | INT 1 - x | Do not count heterozygous SNP for sample if depth doesn't match or exceed [min_depth_heterozygous] |
+| -bialleic | --bialleic | Optional | NO INPUT | Only keep sites that are biallelic (Max Alleles = 2, Min Alleles = 2). No value required after [-biallelic] |
 | -removeindels | --removeindels | Optional | NO INPUT | Remove SNP site if REF or ALT is an indel. No value required after [-removeindels] |
 | -csv | --csvout | Optional | NO INPUT | After filtering, remove headers and return a human readable CSV version of the VCF. No value required after [-csv] |
 
