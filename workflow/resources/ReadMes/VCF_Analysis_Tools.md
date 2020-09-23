@@ -33,7 +33,7 @@ Following the command, you can add your arguments for filtering, as seen in opti
 | -vcf | --vcf | Yes | PATH | VCF file you want to filter.  Can be compressed with gzip or uncompressed |
 | -out | --outfile | Yes | TEXT / PATH | Prefix for this filter, this will be the name of a new directory where the filtered VCF file will be saved (relative to path of CWD) |
 | -qual | --min_quality | Optional | INT 0-999 | Set the QUAL minimum for the SNP site, remove SNP if score is below [qual] argument |
-| -miss | --max_missing | Optional | FLOAT 0.0 - 1.0 | Remove SNP site if site doesn't have AT LEAST [max_missing] calls across all samples in site. Written as % of samples to have a call ie. 0.7 == 70% of samples with call) |
+| -miss | --max_missing | Optional | FLOAT 0.0 - 1.0 | Remove SNP site if site doesn't have AT LEAST [max_missing] calls across all samples in site. Written as % of samples to have a call ie. 0.7 == 70% of samples with genotype call) |
 | -maf | --minor_allel_frequency | Optional | FLOAT 0.00 - 1.00 | "Remove SNP site if minor allele frequency is LOWER than [minor_allele_freq] |
 | -mindp | --minimum_snp_depth | Optional | INT 1 - x | Remove SNP site when snp depth is BELOW [minimimum_snp_depth], over_rides homo/het depth if higher |
 | -dphom | --min_depth_homozygous | Optional | INT 1 - x | Do not count homozygous SNP for sample if depth doesn't match or exceed [min_depth_homozygous] |
