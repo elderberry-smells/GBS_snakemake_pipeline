@@ -2,6 +2,8 @@
 
 ## **1 . VCF Filter Program**
 
+### **NOTE** -- version 2 has been uploaded, which has added the function to filter and have an html summary (similar in nature to something like fastqc outputs).  A new readme will be supplied eventually once that script is finalized.
+
 ### **Description**
 This is a filtering script for VCF files (VCF format version 4.2) written in python (3.6).  This script allows you to set parameters and filter out SNP sites that match or exceed parameters indicated. 
 
