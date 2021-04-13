@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    body {font-family: "Lato", sans-serif;}
+
+    .sidebar {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 16px;
+    }
+
+    .sidebar a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+    }
+
+    .sidebar a:hover {
+    color: #f1f1f1;
+    }
+
+    .main {
+    margin-left: 200px; /* Same as the width of the sidenav */
+    padding: 0px 10px;
+    }
+
+    @media screen and (max-height: 450px) {
+    .sidebar {padding-top: 15px;}
+    .sidebar a {font-size: 18px;}
+    }
+
+    /* Table Formats */
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 60%;
+    }
+    td,
+    th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    
+    tbody div{
+    overflow:scroll;
+    height:400px;
+    }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <a href="#filter_summ"> Filter Summary</a>
+  <a href="#chr"> Chromosomes</a>
+  <a href="#chrom_fig"> Chromosome Graph</a>
+  <a href="#depth"> Depth</a>
+  <a href="#depth_fig"> Depth Figure</a>
+  <a href="#hets"> Heterozygosity</a>
+  <a href="#het_fig"> Het Figure</a>
+  <a href="#maf"> Minor Allele Stats</a>
+  <a href="#maf_fig"> MAF Figure</a>
+</div>
+
+<div class="main">
+    <header><h2>AAFC VCF Filter - Summary Stats</h2></header>
+    <p>The following tables and graphs represent the make up of the following filtered VCF file:</p>
+    <p><h3>{{ vcf_file }}</h3></p>
+    <br>
+    <a id="filter_summ"><h2>Filter Summary</h2></a>
+    <p>Samples in VCF: {{ num_samp }}</p>
+    <p>Pre Filter Sites: {{ presites }}</p>
+    <p>Post Filter Sites: {{ postsites }}</p>
+    <p>Percent Retained in Filter: {{ pretain }}</p>
+    <p>Reasons for Drops:</p>
+    <pre>
+    {% for why, num in why_dropped.items() %}
+        {{ why }}: {{ num }}
+    {% endfor %}
+    </pre>
+    <br>
+    <h3>Summary of the entire genome by chromsome for select stats</h3>
+    <div>{{ chr_summ }}</div>
+    <br>
+    <h3>Chromosome Summary Visualization</h3>
+    <a id="chrom_fig"><div>{{ graph }}</div></a>
+</div>
+<div class="main">
+    <header><h2>AAFC VCF Filter - Sample Stats</h2></header>
+    <p>There are text files detailing every sample, and can be seen in the stats/ folder in the same directory as your VCF if you would like to further analyze the sample compositions</p>
+    <a id="depth"><h3>Summary of Depth</h3></a>
+    <p>The following depth data can be utilized to determine if there are maybe over or under represented samples in the sequencing for depth, or if maybe you will need further sequencing if depth across samples is too low</p>
+    <p>Mean depth of all samples across genome: {{mean_dp}}</p>
+    <h4>Top 5 Depth samples</h4>
+    <div>{{ dp_top5 }}</div> 
+    <h4>Bottom 5 Depth samples</h4>
+    <div>{{ dp_bot5 }}</div> 
+    <h3>Average Depth of all samples across chromosomes</h3>
+    <p>Zoom in on species by dragging a boundary around section of graph</p>
+    <a id="depth_fig"><div>{{ dp_dist }}</div></a>
+    <br>
+    <a id="hets"><h3>Summary of Heterozygosity</h3></a>
+    <p>The following heterozygsity data gives a snap shot of heterozygosity (as a % of the whole) for the population in the filtered VCF</p>
+    <p>Mean heterozygosity in filtered VCF: {{ mean_het }}</p>
+    <h4>Top 5 Heterozygosity samples</h4>
+    <div>{{ het_top5 }}</div> 
+    <h4>Bottom 5 Heterozygosity samples</h4>
+    <div>{{ het_bot5 }}</div> 
+    <br>
+    <h3>Heterozygosity Distribution</h3>
+    <p>You can toggle the data visualization by chromosome by clicking the group on or off in the right axis legend. Double click to activate only 1 if multiple are showing.</p>
+    <a id="het_fig"><div>{{ het_dist }}</div></a>
+    <br>
+    <a id="maf"><h3>Summary of Minor Allele Frequency</h3></a>
+    <p>This data can be seen in the /stats folder with the .allele file
+    <p>Average MAF in filtered VCF: {{ mean_maf }}</p>
+    <p>The following are the top 5 and bottom 5 for minor allele frequency (MAF across entire genome):</p>
+    <h4>Top 5 MAF samples</h4>
+    <div>{{ maf_top5 }}</div> 
+    <h4>Bottom 5 MAF samples</h4>
+    <div>{{ maf_bot5 }}</div> 
+    <br>
+    <h3>MAF Distribution</h3>
+    <a id="maf_fig"><div>{{ maf_dist }}</div></a>
+</div>
+     
+</body>
+</html> 
