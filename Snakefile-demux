@@ -105,7 +105,6 @@ print(sort_output)
 
 rule all:
     input:
-        expand("{fastqc}.{read}_fastqc.html", fastqc=fastqc_output, read=[1, 2]),
         expand("{sort_out}.bam", sort_out=sort_output),
         "log/multiqc_report.html"
 
