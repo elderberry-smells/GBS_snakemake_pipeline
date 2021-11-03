@@ -108,8 +108,8 @@ rule all:
         expand("{sort_out}.bam", sort_out=sort_output),
         "log/multiqc_report.html"
 
-include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/fastqc-demux.smk"
-include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/trim-demux.smk"
-include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/bwa_map-demux.smk"
-include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/novosort-demux.smk"
-include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/multiqc-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/fastqc-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/trim-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/bwa_map-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/novosort-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/multiqc-demux.smk"
