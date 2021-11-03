@@ -1,0 +1,4 @@
+demux_dir: "/home/bioinf/gbs_data/sample3/barley/demultiplex"
+samplesheet: "/home/bioinf/gbs_data/sample3/samplesheet.csv"
+barcodefile:  "/home/bioinf/gbs2/workflow/resources/barcodes/barcodes_192.txt"
+
