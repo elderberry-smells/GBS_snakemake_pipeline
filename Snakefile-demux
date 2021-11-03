@@ -1,0 +1,116 @@
+from string import ascii_lowercase
+import os
+import subprocess
+from pathlib import Path
+import csv
+
+#################################     Defined Functions      #########################################
+def parse_samplesheet(sample_sheet):
+    # determine the format of the samplesheet
+    sample_path, sample_basename = os.path.split(sample_sheet)
+    samp_ext = os.path.splitext(sample_basename)[1]
+
+    try:
+        samp_ext in ['.csv', '.txt', '.tsv']
+    except NameError:
+        print("Ooops!  Your file format for your samplesheet is not accepted for this pipeline.\n"
+              "Change to one of the following formats:  .csv, .txt, .tsv")
+
+    indexes = []
+    samples = []
+    ref_dirs = []
+    refs = {}
+
+    with open(sample_sheet, newline='') as samp_file:
+        next(samp_file)
+        if samp_ext == '.csv':
+            reader = csv.reader(samp_file, delimiter='\t')
+        else:
+            reader = csv.reader(samp_file, delimiter='\t')
+        for row in reader:
+            indexes.append(row[1])
+            samples.append(row[2])
+            ref_dirs.append(row[3].strip())
+            # add to the reference dictionary:  format {sample_name: reference path}
+            refs[row[2]] = row[3].strip()  # make sure there is no white space after line ends...
+
+    return indexes, samples, ref_dirs, refs
+
+
+def reference_samples(sample_list, reference_list):
+    return {k: v for k, v in zip(sample_list, reference_list) if v != ''}
+
+
+def output_lists(zipped_samples):
+    """
+    make a list of the outputs expected in the pipeline.
+    :param zipped_samples: the samples and reference lists from config file zipped together
+    :return: list for demux, trim, and bams, and sorted bams
+    """
+
+    # from the base directory (where demultiplex folder lives) generate the names of the trimmomatic, bams and sorted bam files
+
+    demuxer = []
+    bammer = []
+    unique_ref_dirs = []
+    for r, s in zipped_samples:
+        entry = f"demultiplex/{s}"
+        bam_entry = f"mapped_reads/{s}"
+        bammer.append(bam_entry)
+        demuxer.append(entry)
+
+    trimmer = [i.replace('demultiplex', 'trimmomatic') for i in demuxer]
+    sorter = [i.replace('mapped_reads', 'sorted_bams') for i in bammer]
+
+
+    return demuxer, trimmer, bammer, sorter
+
+
+#############################################   Input and Variables  ##################################################
+
+# get current username for computer
+home_dir = str(Path.home())
+print(home_dir)
+
+# read in the config file to get pathways/samples into variables
+config_fname = f"{home_dir}/gbs2/config/config_demux.yaml"
+
+configfile: config_fname
+
+demux_dir = config["demux_dir"]
+samplesheet = config["samplesheet"]
+barcode_file = config["barcodefile"]
+
+
+# get the pathway from the read1 fastq file, this is where we want to run the pipeline (set working dir)
+path_name, base_name = os.path.split(demux_dir)
+file_handle = os.path.splitext(base_name)[0]
+file_name = os.path.splitext(file_handle)[0]
+lib_id = Path(samplesheet).parent.name  # for naming the am ID line - just get the name of the folder the demux lives in
+
+# read the sample sheet and parse the data you need out of it into variables
+index, samples, reflist, bams = parse_samplesheet(samplesheet)
+ref_sample = zip(reflist, samples)
+
+demux, trimlist, bam_output, sort_output = output_lists(ref_sample)
+
+
+sam_ref = reference_samples(samples, reflist)
+fastqc_output = [i.replace('sorted_bams', 'log/fastqc') for i in sort_output]
+
+workdir: path_name
+print(sort_output)
+
+#######################################  RULES ##################################################
+
+rule all:
+    input:
+        expand("{fastqc}.{read}_fastqc.html", fastqc=fastqc_output, read=[1, 2]),
+        expand("{sort_out}.bam", sort_out=sort_output),
+        "log/multiqc_report.html"
+
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/fastqc-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/trim-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/bwa_map-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/novosort-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demulitplexed/multiqc-demux.smk"
