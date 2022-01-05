@@ -158,12 +158,16 @@ Check out the [VCF_Analysis_tools ReadMe](https://github.com/elderberry-smells/G
     ```
 - When that is done running, you should see `(gbs)` on the left side of your command line
 
-4. Move the novosort folder to your newly created gbs environment binhttps://www.biostars.org/p/162575/
+4. Move the novosort folder to your newly created gbs environment bin https://www.biostars.org/p/162575/
     
     ```shell script
     $ mv GBS_snakemake_pipeline/workflow/resources/novocraft/ ~/miniconda3/envs/gbs/bin/
     ```
-      
+    Make sure the folder has proper permissions (read/write/execute)
+    ```shell script
+    $ chmod 777 ~/miniconda3/envs/gbs/bin/novocraft
+    ```
+    
     Add that folder to your profile so novosort is a callable command
     
     ```shell script
