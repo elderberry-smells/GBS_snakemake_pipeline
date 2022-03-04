@@ -151,35 +151,13 @@ Check out the [VCF_Analysis_tools ReadMe](https://github.com/elderberry-smells/G
     ~/gbs/GBS_snakemake_pipeline/workflow/resources/
     ```
 3. Install the GBS snakemake environment on your computer
-- Create an environment for snakemake using the `workflow/envs/gbs.yaml` file from the repo you downloaded, then activate it.
+- Create an environment for snakemake using the `workflow/envs/gbs-spec-file.txt` file from the repo you downloaded, then activate it.
     ```shell script
-    $ conda env create -f ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs.yaml
+    $ conda create --name gbs --file ~/gbs/GBS_snakemake_pipeline/workflow/envs/gbs-spec-file.txt
     $ conda activate gbs
     ```
 - When that is done running, you should see `(gbs)` on the left side of your command line
-
-4. Move the novosort folder to your newly created gbs environment bin https://www.biostars.org/p/162575/
-    
-    ```shell script
-    $ mv GBS_snakemake_pipeline/workflow/resources/novocraft/ ~/miniconda3/envs/gbs/bin/
-    ```
-    Make sure the folder has proper permissions (read/write/execute)
-    ```shell script
-    $ chmod 777 ~/miniconda3/envs/gbs/bin/novocraft
-    ```
-    
-    Add that folder to your profile so novosort is a callable command
-    
-    ```shell script
-    $ nano ~/.bashrc 
-    ```
-    Add the path below to the bottom of the ~/.bashrc file (to paste in terminal, simply right click after you copy the path)
-    ```shell script
-    export PATH="$PATH:~/miniconda3/envs/gbs/bin/novocraft"
-    ``` 
-    `cntrl-o` to save (press enter)
-    
-    `cntrl-x` to exit
+- everything should be installed to run the pipeline.
      
 #### bioinformatics dependencies
 all of these dependencies should be now be installed and callable by typing in their names in terminal
