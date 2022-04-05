@@ -157,7 +157,25 @@ Check out the [VCF_Analysis_tools ReadMe](https://github.com/elderberry-smells/G
     $ conda activate gbs
     ```
 - When that is done running, you should see `(gbs)` on the left side of your command line
-- everything should be installed to run the pipeline.
+4.  Allow Novosort to be a callable program within gbs environment
+- move the novocraft file into the recently created gbs environment, and add that path to your bashrc profile 
+    ```shell script
+    $ mv ~/gbs/GBS_Snakemake_pipeline/workflow/resources/novocraft ~/miniconda3/envs/gbs/bin
+    $ nano ~/.bashrc
+    ```
+- at the bottom of that file, add the following line:
+```shell script
+export PATH="~/miniconda3/envs/gbs/bin/novocraft":$PATH
+```
+- cntrl + O to save (enter)
+- cntrl + X to close
+
+- make the novosort file executable by changing permissions
+    ```shell script
+    $ chmod 777 ~/gbs/GBS_Snakemake_pipeline/workflow/resources/novocraft/novosort
+    ```
+
+- everything should be installed to run the pipeline now.
      
 #### bioinformatics dependencies
 all of these dependencies should be now be installed and callable by typing in their names in terminal
