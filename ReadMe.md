@@ -172,7 +172,7 @@ export PATH="~/miniconda3/envs/gbs/bin/novocraft":$PATH
 
 - make the novosort file executable by changing permissions
     ```shell script
-    $ chmod 777 ~/gbs/GBS_Snakemake_pipeline/workflow/resources/novocraft/novosort
+    $ chmod 777 ~/miniconda3/envs/gbs/bin/novocraft/novosort
     ```
 
 - everything should be installed to run the pipeline now.
