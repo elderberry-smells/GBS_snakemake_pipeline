@@ -95,7 +95,8 @@ def generate_split_list(fastq_r1, fname, split_lines):
     
     split_files = line_count/split_lines # total number of files that will be created
     
-    name_list = total_names[:int(split_files)+1]  # slice only the names for the number of split files to be generated
+    # I had to remove the +1 from this next line, as the split is not generating that extra file all the time.  This function could use a re-write as it seems to change deopending on the sizer of the file being split.
+    name_list = total_names[:int(split_files)]  # slice only the names for the number of split files to be generated
     name_list2 = [split_fname.replace('_R1', '_R2') for split_fname in name_list]
     
     return name_list, name_list2
