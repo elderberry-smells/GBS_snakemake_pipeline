@@ -157,8 +157,10 @@ Check out the [VCF_Analysis_tools ReadMe](https://github.com/elderberry-smells/G
     $ conda activate gbs
     ```
 - When that is done running, you should see `(gbs)` on the left side of your command line
-4.  Allow Novosort to be a callable program within gbs environment
-- move the novocraft file into the recently created gbs environment, and add that path to your bashrc profile 
+4a. Install Novocraft 3.10 if you don't have it (https://www.novocraft.com/support/download/) 
+- Untar with command tar -xzf novo…tar.gz
+4b.  Allow Novosort to be a callable program within gbs environment
+- move that entire novocraft directory into the recently created gbs environment, and add that path to your bashrc profile 
     ```shell script
     $ mv ~/gbs/GBS_Snakemake_pipeline/workflow/resources/novocraft ~/miniconda3/envs/gbs/bin
     $ nano ~/.bashrc
