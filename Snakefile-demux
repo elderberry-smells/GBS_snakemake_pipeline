@@ -24,7 +24,7 @@ def parse_samplesheet(sample_sheet):
     with open(sample_sheet, newline='') as samp_file:
         next(samp_file)
         if samp_ext == '.csv':
-            reader = csv.reader(samp_file, delimiter='\t')
+            reader = csv.reader(samp_file, delimiter=',')
         else:
             reader = csv.reader(samp_file, delimiter='\t')
         for row in reader:
