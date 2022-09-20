@@ -72,8 +72,9 @@ def output_lists(zipped_samples):
 home_dir = str(Path.home())
 print(home_dir)
 
+
 # read in the config file to get pathways/samples into variables
-config_fname = f"{home_dir}/gbs2/config/config_demux.yaml"
+config_fname = f"{home_dir}/gbs/GBS_snakemake_pipeline/config/config_demux.yaml"
 
 configfile: config_fname
 
@@ -94,12 +95,10 @@ ref_sample = zip(reflist, samples)
 
 demux, trimlist, bam_output, sort_output = output_lists(ref_sample)
 
-
 sam_ref = reference_samples(samples, reflist)
 fastqc_output = [i.replace('sorted_bams', 'log/fastqc') for i in sort_output]
 
 workdir: path_name
-print(sort_output)
 
 #######################################  RULES ##################################################
 
@@ -108,8 +107,9 @@ rule all:
         expand("{sort_out}.bam", sort_out=sort_output),
         "log/multiqc_report.html"
 
-include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/fastqc-demux.smk"
+
 include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/trim-demux.smk"
 include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/bwa_map-demux.smk"
 include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/novosort-demux.smk"
-include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/multiqc-demux.smk"
+include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/qc_stats.smk"
+
