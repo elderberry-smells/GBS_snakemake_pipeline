@@ -3,100 +3,48 @@ import os
 import subprocess
 from pathlib import Path
 import csv
+import glob
 
-#################################     Defined Functions      #########################################
-def parse_samplesheet(sample_sheet):
-    # determine the format of the samplesheet
-    sample_path, sample_basename = os.path.split(sample_sheet)
-    samp_ext = os.path.splitext(sample_basename)[1]
-
-    try:
-        samp_ext in ['.csv', '.txt', '.tsv']
-    except NameError:
-        print("Ooops!  Your file format for your samplesheet is not accepted for this pipeline.\n"
-              "Change to one of the following formats:  .csv, .txt, .tsv")
-
-    indexes = []
-    samples = []
-    ref_dirs = []
-    refs = {}
-
-    with open(sample_sheet, newline='') as samp_file:
-        next(samp_file)
-        if samp_ext == '.csv':
-            reader = csv.reader(samp_file, delimiter=',')
-        else:
-            reader = csv.reader(samp_file, delimiter='\t')
-        for row in reader:
-            indexes.append(row[1])
-            samples.append(row[2])
-            ref_dirs.append(row[3].strip())
-            # add to the reference dictionary:  format {sample_name: reference path}
-            refs[row[2]] = row[3].strip()  # make sure there is no white space after line ends...
-
-    return indexes, samples, ref_dirs, refs
-
-
-def reference_samples(sample_list, reference_list):
-    return {k: v for k, v in zip(sample_list, reference_list) if v != ''}
-
-
-def output_lists(zipped_samples):
-    """
-    make a list of the outputs expected in the pipeline.
-    :param zipped_samples: the samples and reference lists from config file zipped together
-    :return: list for demux, trim, and bams, and sorted bams
-    """
-
-    # from the base directory (where demultiplex folder lives) generate the names of the trimmomatic, bams and sorted bam files
-
-    demuxer = []
-    bammer = []
-    unique_ref_dirs = []
-    for r, s in zipped_samples:
-        entry = f"demultiplex/{s}"
-        bam_entry = f"mapped_reads/{s}"
-        bammer.append(bam_entry)
-        demuxer.append(entry)
-
-    trimmer = [i.replace('demultiplex', 'trimmomatic') for i in demuxer]
-    sorter = [i.replace('mapped_reads', 'sorted_bams') for i in bammer]
-
-
-    return demuxer, trimmer, bammer, sorter
-
-
-#############################################   Input and Variables  ##################################################
 
 # get current username for computer
 home_dir = str(Path.home())
-print(home_dir)
-
 
 # read in the config file to get pathways/samples into variables
-config_fname = f"{home_dir}/gbs/GBS_snakemake_pipeline/config/config_demux.yaml"
+
+# determine if config file is in folder, if not, copy the config file from snakemake pipeline directory into working path
+if Path('config_demux.yaml').is_file():
+    config_fname = 'config_demux.yaml'
+else:
+    demux_config = f"{home_dir}/gbs/GBS_snakemake_pipeline/config/config_demux.yaml"
+
+    with open('config_demux.yaml', 'w', newline='') as conf_out:
+        with open(demux_config, 'r') as config:
+            for line in config:
+                conf_out.write(line)
+
+    config_fname = 'config_demux.yaml'
 
 configfile: config_fname
 
 demux_dir = config["demux_dir"]
-samplesheet = config["samplesheet"]
-barcode_file = config["barcodefile"]
+demux_parent = Path(demux_dir).name
+demux_output = f"{demux_parent}.tar.gz"
+reference_fai = config["reference"]
 
+demux_files = glob.glob(f'{demux_dir}/*')
+
+# generate a list of sorted bams and fastqc files that will be output at end of process
+sample_outputs = [f'{Path(i).stem[:-2]}' for i in demux_files]  # get just name (no .1 or .2 on file name)
+
+trim_input1 = demux_parent+'/{sample}.1.fastq'
+print(trim_input1)
+trim_input2 = demux_parent+'/{sample}.2.fastq'
 
 # get the pathway from the read1 fastq file, this is where we want to run the pipeline (set working dir)
 path_name, base_name = os.path.split(demux_dir)
 file_handle = os.path.splitext(base_name)[0]
 file_name = os.path.splitext(file_handle)[0]
-lib_id = Path(samplesheet).parent.name  # for naming the am ID line - just get the name of the folder the demux lives in
-
-# read the sample sheet and parse the data you need out of it into variables
-index, samples, reflist, bams = parse_samplesheet(samplesheet)
-ref_sample = zip(reflist, samples)
-
-demux, trimlist, bam_output, sort_output = output_lists(ref_sample)
-
-sam_ref = reference_samples(samples, reflist)
-fastqc_output = [i.replace('sorted_bams', 'log/fastqc') for i in sort_output]
+lib_id = Path(demux_dir).parent.name  # for naming the am ID line - just get the name of the folder the demux lives in
 
 workdir: path_name
 
@@ -104,12 +52,13 @@ workdir: path_name
 
 rule all:
     input:
-        expand("{sort_out}.bam", sort_out=sort_output),
-        "log/multiqc_report.html"
-
+        expand("sorted_bams/{sort_out}.bam", sort_out=sample_outputs),
+        "log/multiqc_report",
+        demux_output
 
 include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/trim-demux.smk"
 include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/bwa_map-demux.smk"
 include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/novosort-demux.smk"
 include: f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/qc_stats.smk"
+include:  f"{home_dir}/gbs/GBS_snakemake_pipeline/workflow/rules/demux/cleanup.smk"
 
