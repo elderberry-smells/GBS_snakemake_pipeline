@@ -40,6 +40,9 @@ Once your environment is set up you can start running the pipeline!
 
 Start at the beginning with Generating BAMs, or if you have BAMs you want to process, move on to generating VCFs!
 
+Already have demultiplexed fastq's?  Try using the [pre-demux pipeline](workflow/resources/ReadMes/
+pre-demux_workflow.md)
+
 #### Generating BAMs
 Take paired end Fastq files (R1 and R2) and produce sorted BAM files and BAM index files
 1. Create and save sample sheet into cluster - generally helpful to put it in same directory as fastq files.  For format [see samplesheet](workflow/resources/ReadMes/Supporting_Files.md) in supporting file readme.
