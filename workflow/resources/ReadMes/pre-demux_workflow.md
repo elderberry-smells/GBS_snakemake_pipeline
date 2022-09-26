@@ -37,15 +37,20 @@ demux_dir: "/home/username/path/to/prjoect_directory/demultiplexed_fastq"
 reference: "/home/username/reference/reference1/reference1.fasta"
 ```
 4. Run the Snakefile-demux (2 ways)
+
     a. On the cluster  (set cores by changing pre_demux.sh file parameters)
+  
     ```
     $ qsub ~/gbs/GBS_Snakemake_pipeline/workflow/pre_demux.sh
     ```
+    
     b. On your own machine (set cores after -j)
+    
     ```
     $ conda activate gbs
     $ snakmake -s ~/gbs/GBS_Snakemake_pipeline/workflow/Snakefile-demux -j 8
     ```
+    
 5. Done
 
 ###  Outputs
