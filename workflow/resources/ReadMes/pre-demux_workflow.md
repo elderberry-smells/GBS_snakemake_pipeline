@@ -1,12 +1,12 @@
-# Pre-demultiplexed workflow
+# Pre-demultiplexed workflow for paired end GBS
 
 Use this process if you are using ALREADY demultiplexed samples.  
 It will run through the same process as the original snakefile (trim, align, sort, QC, cleanup) but with fewer inputs to complete. 
 It will remove all temporary files, and zip up your demultiplexed folder at the end.  You should be left with a 
-dircetory of sorted BAMs to use in your next process.
+directory of sorted BAMs to use in your next process.
 
 ### What you will need to run this pipeline
-1. Demutliplexed samples inside a directory (all together).  The format will look something like this
+1. Demutliplexed samples inside a directory (all together).  The format will look something like this (note that the naming of the files needs to be .1.fastq and .2.fastq)
 ```
 project_directory/    
 |
@@ -25,7 +25,7 @@ Thats it.
 ### How to run the Snakefile-demux
 1. Navigate to the project directory containing the demultiplexed directory.
 ```
-$ cd /home/username/path/to/prjoect_directory/
+$ cd /home/username/path/to/project_directory/
 ```
 3. Open the snakemake config file to edit it (2 lines)
 ```
