@@ -54,7 +54,7 @@ Take paired end Fastq files (R1 and R2) and produce sorted BAM files and BAM ind
    ```
    $  nano ~/gbs/GBS_snakemake_pipeline/config/config.txt
    ```
-   manually change the fields for your project
+   manually change the fields for your project (note that the raw fastq files need to be named _R1.fastq.gz and _R2.fastq.gz)
    ```
    sample_read1: "/input/absolute/path/to/sample_R1.fastq.gz"
    samplesheet: "/input/absolute/path/to/samplesheet.txt or samplesheet.csv"
