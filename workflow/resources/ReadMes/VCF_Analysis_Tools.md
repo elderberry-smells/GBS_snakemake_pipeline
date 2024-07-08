@@ -53,7 +53,7 @@ The program will have 2 outputs when run, both of which will be located in the -
 An example of a stats output is shown below, which came from a command line call as follows:
 
 ```
-$ python3 ~/gbs/GBS_snakemake_pipeline/workflow/scripts/AAFC_filter_vcf.py -vcf example_vcf.vcf.gz -out filter/standard_filter -qual 30 -miss 0.7 - maf 0.05 -dphom 1 -dphom 2 -removeindels
+$ python3 ~/gbs/GBS_snakemake_pipeline/workflow/scripts/AAFC_filter_vcf.py -vcf example_vcf.vcf.gz -out filter/standard_filter -qual 30 -miss 0.7 - maf 0.05 -dphom 1 -dphet 2 -removeindels
 ```
 filter/standard_filter/example_vcf.stats
 ```
