@@ -48,7 +48,7 @@ reference: "/home/username/reference/reference1/reference1.fasta"
     
     ```
     $ conda activate gbs
-    $ snakmake -s ~/gbs/GBS_Snakemake_pipeline/workflow/Snakefile-demux -j 8
+    $ snakemake -s ~/gbs/GBS_Snakemake_pipeline/workflow/Snakefile-demux -j 8
     ```
     
 5. Done
